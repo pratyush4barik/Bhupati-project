@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: auth-next-app
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build -- --webpack
+    startCommand: npm run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: BETTER_AUTH_URL
+        sync: false
+      - key: NEXT_PUBLIC_BETTER_AUTH_URL
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: MONITOR_JWT_SECRET
+        sync: false

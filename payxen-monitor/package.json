@@ -1,0 +1,60 @@
+{
+  "name": "payxen-monitor",
+  "version": "1.0.0",
+  "description": "PayXen Monitor desktop focused-time tracking agent",
+  "main": "dist/main/main.js",
+  "author": "PayXen",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build": "npm run clean && npm run build:main && npm run build:renderer",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:renderer": "node scripts/build-renderer.js",
+    "clean": "powershell -NoProfile -Command \"if (Test-Path dist) { Remove-Item dist -Recurse -Force }\"",
+    "dev": "concurrently \"npm:dev:main\" \"npm:dev:watch\"",
+    "dev:main": "wait-on dist/main/main.js && electron .",
+    "dev:watch": "npm run build:renderer && tsc -p tsconfig.main.json --watch",
+    "dist:win": "npm run build && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "active-win": "^9.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "concurrently": "^9.1.2",
+    "electron": "^35.0.1",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.8.2",
+    "wait-on": "^8.0.2"
+  },
+  "build": {
+    "appId": "com.payxen.monitor",
+    "productName": "PayXen Monitor",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": true
+    }
+  }
+}

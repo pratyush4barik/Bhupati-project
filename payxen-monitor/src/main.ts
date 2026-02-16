@@ -1,0 +1,212 @@
+import path from "node:path";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  nativeImage,
+  shell,
+  Tray,
+} from "electron";
+import { MonitorController } from "./core/monitor-controller";
+import type { ActiveServiceUsageCard } from "./core/types";
+
+let mainWindow: BrowserWindow | null = null;
+let tray: Tray | null = null;
+let isQuitting = false;
+
+const controller = new MonitorController();
+
+function getTrayIcon() {
+  // 16x16 blue square icon
+  return nativeImage.createFromDataURL(
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIUlEQVQ4T2NkoBAwUqifYdQABhqG0QCsQYIhQxGoAAAOXwE6hO8fYQAAAABJRU5ErkJggg==",
+  );
+}
+
+function createTray() {
+  tray = new Tray(getTrayIcon());
+  tray.setToolTip("PayXen Monitor");
+  tray.setContextMenu(
+    Menu.buildFromTemplate([
+      {
+        label: "Open PayXen Monitor",
+        click: () => {
+          if (!mainWindow || mainWindow.isDestroyed()) {
+            createWindow();
+          } else {
+            mainWindow.show();
+            mainWindow.focus();
+          }
+        },
+      },
+      {
+        label: "Quit PayXen Monitor",
+        click: () => {
+          isQuitting = true;
+          app.quit();
+        },
+      },
+    ]),
+  );
+
+  tray.on("double-click", () => {
+    if (!mainWindow || mainWindow.isDestroyed()) {
+      createWindow();
+      return;
+    }
+    mainWindow.show();
+    mainWindow.focus();
+  });
+}
+
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 760,
+    minWidth: 980,
+    minHeight: 640,
+    title: "PayXen Monitor",
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+  });
+
+  const htmlPath = path.join(__dirname, "..", "renderer", "index.html");
+  void mainWindow.loadFile(htmlPath);
+
+  mainWindow.on("close", (event) => {
+    if (isQuitting) return;
+    event.preventDefault();
+    mainWindow?.hide();
+  });
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+}
+
+function emitStatusToRenderer() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.webContents.send("monitor:status", controller.getRuntimeStatus());
+}
+
+function applyAutoStart(enabled: boolean) {
+  app.setLoginItemSettings({ openAtLogin: enabled });
+}
+
+function validateBackendUrl(value: string) {
+  try {
+    const url = new URL(value);
+    const isHttps = url.protocol === "https:";
+    const isLocal = url.protocol === "http:" && url.hostname === "localhost";
+    return isHttps || isLocal;
+  } catch {
+    return false;
+  }
+}
+
+function registerIpcHandlers() {
+  ipcMain.handle("monitor:get-state", () => controller.getRuntimeStatus());
+
+  ipcMain.handle("monitor:set-tracking-enabled", (_event, enabled: boolean) => {
+    controller.updateSettings({ trackingEnabled: Boolean(enabled) });
+    return controller.getRuntimeStatus();
+  });
+
+  ipcMain.handle("monitor:set-paused", (_event, paused: boolean) => {
+    controller.updateSettings({ isPaused: Boolean(paused) });
+    return controller.getRuntimeStatus();
+  });
+
+  ipcMain.handle("monitor:set-auto-start", (_event, enabled: boolean) => {
+    const value = Boolean(enabled);
+    controller.updateSettings({ autoStart: value });
+    applyAutoStart(value);
+    return controller.getRuntimeStatus();
+  });
+
+  ipcMain.handle("monitor:set-consent-accepted", (_event, accepted: boolean) => {
+    controller.updateSettings({ consentAccepted: Boolean(accepted) });
+    return controller.getRuntimeStatus();
+  });
+
+  ipcMain.handle(
+    "monitor:connect-with-token",
+    async (_event, payload: { backendBaseUrl: string; token: string }) => {
+      const backendBaseUrl = payload.backendBaseUrl.trim();
+      if (!validateBackendUrl(backendBaseUrl)) {
+        throw new Error("Backend URL must be HTTPS. Use http://localhost for local development.");
+      }
+      const state = await controller.connectWithToken({
+        backendBaseUrl,
+        token: payload.token,
+      });
+      return state;
+    },
+  );
+
+  ipcMain.handle("monitor:disconnect-account", () => {
+    controller.disconnectAccount();
+    return controller.getRuntimeStatus();
+  });
+
+  ipcMain.handle("monitor:delete-local-data", (_event, serviceName?: ActiveServiceUsageCard["serviceName"]) => {
+    controller.deleteLocalData(serviceName);
+    return controller.getRuntimeStatus();
+  });
+
+  ipcMain.handle("monitor:refresh-active-services", async () => {
+    await controller.refreshActiveServices();
+    return controller.getRuntimeStatus();
+  });
+
+  ipcMain.handle("monitor:open-external", async (_event, url: string) => {
+    await shell.openExternal(url);
+  });
+
+  ipcMain.handle("monitor:quit-app", () => {
+    isQuitting = true;
+    app.quit();
+  });
+}
+
+const singleInstanceLock = app.requestSingleInstanceLock();
+if (!singleInstanceLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    if (!mainWindow || mainWindow.isDestroyed()) {
+      createWindow();
+      return;
+    }
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
+    mainWindow.focus();
+  });
+}
+
+app.whenReady().then(() => {
+  registerIpcHandlers();
+  controller.on("status", emitStatusToRenderer);
+  applyAutoStart(controller.getSettings().autoStart);
+  controller.start();
+  createTray();
+  createWindow();
+});
+
+app.on("activate", () => {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    createWindow();
+    return;
+  }
+  mainWindow.show();
+  mainWindow.focus();
+});
+
+app.on("before-quit", () => {
+  isQuitting = true;
+  controller.stop();
+});

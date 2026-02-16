@@ -1,0 +1,111 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1770836031119,
+      "tag": "0000_milky_blockbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1770917915042,
+      "tag": "0001_far_angel",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770922374611,
+      "tag": "0002_wooden_wind_dancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1770929706128,
+      "tag": "0003_subscription_checkout_flow",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1770930746347,
+      "tag": "0004_remove_subscription_plans_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1770930772266,
+      "tag": "0005_unique_active_subscription_account",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1770931586023,
+      "tag": "0006_subscription_trial_pending_cancel",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1770932368105,
+      "tag": "0007_subscription_unique_per_plan",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1771000000000,
+      "tag": "0008_group_requests_and_split_payments",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1771000500000,
+      "tag": "0009_group_member_settlements",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1771001000000,
+      "tag": "0010_group_delete_request_flow",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1771100000000,
+      "tag": "0011_group_member_remove_flow",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1771200000000,
+      "tag": "0012_wallet_money_requests",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1771300000000,
+      "tag": "0013_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1771320000000,
+      "tag": "0014_payxen_monitor",
+      "breakpoints": true
+    }
+  ]
+}

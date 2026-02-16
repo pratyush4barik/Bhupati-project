@@ -1,0 +1,2 @@
+DROP INDEX "subscriptions_unique_active_account_service_idx";--> statement-breakpoint
+CREATE UNIQUE INDEX "subscriptions_unique_active_account_service_idx" ON "subscriptions" USING btree ("user_id","service_key","external_account_email","plan_name") WHERE "subscriptions"."status" = 'ACTIVE' and "subscriptions"."service_key" is not null and "subscriptions"."external_account_email" is not null and "subscriptions"."plan_name" is not null;
