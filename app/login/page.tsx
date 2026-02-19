@@ -1,5 +1,4 @@
 import { GalleryVerticalEnd } from "lucide-react"
-import Spline from '@splinetool/react-spline/next'
 
 import { LoginForm } from "@/components/ui/app_components/login_form"
 
@@ -22,9 +21,7 @@ export default function LoginPage() {
         </div>
       </div>
       <div className="bg-muted relative hidden lg:block">
-        <Spline
-          scene="https://prod.spline.design/1SvTcU5pyEbeZK92/scene.splinecode"
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300" />
       </div>
     </div>
   )
