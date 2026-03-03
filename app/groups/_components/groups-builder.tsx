@@ -81,6 +81,7 @@ export function GroupsBuilder({ plans, ownerName }: GroupsBuilderProps) {
           groupName={groupName}
           members={members}
           onAddMember={handleAddMember}
+          onGoBack={() => setCurrentStep(1)}
           onGroupNameChange={setGroupName}
           onMemberEmailChange={handleMemberEmailChange}
           onMemberPercentageChange={handleMemberPercentageChange}

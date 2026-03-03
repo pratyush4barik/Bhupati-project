@@ -23,10 +23,10 @@ export function AvailablePlans({
 }: AvailablePlansProps) {
   return (
     <section className="rounded-xl border p-6">
-      <h2 className="text-lg font-semibold">Step 1: Available Plans</h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Showing only your active subscriptions.
-      </p>
+        <h2 className="text-lg font-semibold">Step 1: Available Plans</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Showing only your active subscriptions.
+        </p>
 
       {plans.length === 0 ? (
         <p className="mt-4 text-sm text-muted-foreground">No active subscriptions found.</p>

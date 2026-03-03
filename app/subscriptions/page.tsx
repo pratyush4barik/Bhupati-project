@@ -1,4 +1,5 @@
 import type React from "react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
 import type { IconType } from "react-icons";
 import {
@@ -32,6 +33,7 @@ import {
   loginServiceAccountAction,
   registerServiceAccountAction,
 } from "@/app/subscriptions/actions";
+import { CancelSubscriptionButton } from "@/app/subscriptions/cancel-button";
 import { CheckoutSubmitButton } from "@/app/subscriptions/checkout-submit-button";
 import { PlanNextButton } from "@/app/subscriptions/plan-next-button";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
@@ -271,6 +273,14 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
           ) : null}
 
           {currentStep === 2 ? (
+            <div>
+              <a
+                href="/subscriptions?step=1"
+                className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <IconArrowLeft className="h-4 w-4" />
+                Back
+              </a>
             <section className="rounded-xl border p-4 sm:p-6">
               {!selectedService ? <p className="text-sm text-muted-foreground">Please select a service in Step 1.</p> : (
                 <div className="mx-auto max-w-md rounded-xl border p-4 sm:p-6">
@@ -301,9 +311,18 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                 </div>
               )}
             </section>
+            </div>
           ) : null}
 
           {currentStep === 3 ? (
+            <div>
+              <a
+                href={`/subscriptions?step=2&service=${selectedService?.key ?? ""}&mode=login`}
+                className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <IconArrowLeft className="h-4 w-4" />
+                Back
+              </a>
             <section className="rounded-xl border p-4 sm:p-6">
               {!selectedService ? <p className="text-sm text-muted-foreground">Please choose a service first.</p> : !selectedAccount ? <p className="text-sm text-muted-foreground">Please login or register for this service first.</p> : (
                 <div>
@@ -344,9 +363,18 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                 </div>
               )}
             </section>
+            </div>
           ) : null}
 
           {currentStep === 4 ? (
+            <div>
+              <a
+                href={`/subscriptions?step=3&service=${selectedService?.key ?? ""}&account=${selectedAccount?.id ?? ""}${trialEligible ? "&trialEligible=1" : ""}`}
+                className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <IconArrowLeft className="h-4 w-4" />
+                Back
+              </a>
             <section className="rounded-xl border p-4 sm:p-6">
               {!selectedService || !selectedAccount || !selectedPlan ? <p className="text-sm text-muted-foreground">Missing checkout details. Please complete Steps 1 to 3.</p> : (
                 <div>
@@ -365,6 +393,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                 </div>
               )}
             </section>
+            </div>
           ) : null}
 
           <section className="rounded-xl border p-4 sm:p-6">
@@ -379,7 +408,9 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                     {sub.externalAccountEmail ? <p className="text-xs text-muted-foreground">Account: {sub.externalAccountEmail}</p> : null}
                     {sub.freeTrialTaken && sub.freeTrialEndsAt ? <p className="text-xs text-muted-foreground">Free trial ends: {formatDate(new Date(sub.freeTrialEndsAt))}</p> : null}
                     {sub.status === "ACTIVE" || sub.status === "PENDING" ? (
-                      <form action={cancelSubscriptionAction} className="mt-3"><input name="subscriptionId" type="hidden" value={sub.id} /><button className="rounded-md border border-red-800 px-3 py-1 text-xs text-red-400 transition-colors hover:border-red-600 hover:bg-red-950 hover:text-red-300" type="submit">Cancel subscription</button></form>
+                      <div className="mt-3">
+                        <CancelSubscriptionButton subscriptionId={sub.id} serviceName={sub.serviceName} />
+                      </div>
                     ) : null}
                   </li>
                 ))}

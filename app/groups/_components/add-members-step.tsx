@@ -1,6 +1,7 @@
 "use client";
 
-import { IconPlus, IconTrash, IconUsers } from "@tabler/icons-react";
+import { useState } from "react";
+import { IconArrowLeft, IconPlus, IconTrash, IconUsers } from "@tabler/icons-react";
 import { useFormStatus } from "react-dom";
 import { createGroupAction } from "@/app/groups/actions";
 import { getServiceMeta } from "@/app/groups/service-meta";
@@ -18,6 +19,7 @@ type AddMembersStepProps = {
   onMemberPercentageChange: (id: string, value: number) => void;
   onRemoveMember: (id: string) => void;
   onAddMember: () => void;
+  onGoBack: () => void;
 };
 
 export function AddMembersStep({
@@ -32,6 +34,7 @@ export function AddMembersStep({
   onMemberPercentageChange,
   onRemoveMember,
   onAddMember,
+  onGoBack,
 }: AddMembersStepProps) {
   const serviceMeta = getServiceMeta(selectedPlan.serviceKey);
   const Icon = serviceMeta?.icon ?? IconUsers;
@@ -50,17 +53,30 @@ export function AddMembersStep({
     })),
   );
 
+  const isGroupNameEmpty = groupName.trim().length === 0;
+  const [tried, setTried] = useState(false);
+
   const formatInr = (value: number) => {
     if (!Number.isFinite(value)) return "₹0.00";
     return `₹${value.toFixed(2)}`;
   };
 
   return (
-    <section className="rounded-xl border p-6 transition-colors hover:bg-muted/10">
-      <h2 className="text-lg font-semibold">Step 2: Add Members</h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Add member emails and set percentage split. Total must be 100%.
-      </p>
+    <div>
+      <button
+        type="button"
+        onClick={onGoBack}
+        className="mb-3 flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        title="Go back"
+      >
+        <IconArrowLeft className="h-4 w-4" />
+        Back
+      </button>
+      <section className="rounded-xl border p-6 transition-colors hover:bg-muted/10">
+        <h2 className="text-lg font-semibold">Step 2: Add Members</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Add member emails and set percentage split. Total must be 100%.
+        </p>
 
       <div className="mt-6 flex flex-col items-center gap-4 rounded-lg border p-6 text-center transition-colors hover:bg-muted/10">
         <span className="flex h-12 w-12 items-center justify-center rounded-lg border bg-muted/30 transition-colors hover:bg-muted/50">
@@ -70,15 +86,20 @@ export function AddMembersStep({
 
         <div className="w-full max-w-xl">
           <label className="mb-1 block text-left text-xs text-muted-foreground">
-            Group name
+            Group name {tried && isGroupNameEmpty && <span className="text-red-500">*</span>}
           </label>
           <input
-            className="w-full rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary/60"
+            className={`w-full rounded-md border px-3 py-2 text-sm font-medium transition-colors hover:border-primary/60 ${
+              tried && isGroupNameEmpty ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" : ""
+            }`}
             onChange={(e) => onGroupNameChange(e.target.value)}
             placeholder="Enter group name"
             type="text"
             value={groupName}
           />
+          {tried && isGroupNameEmpty && (
+            <p className="mt-1 text-left text-xs text-red-500">Group name is required</p>
+          )}
         </div>
 
         <div className="w-full max-w-xl rounded-md border bg-muted/20 p-3 transition-colors hover:bg-muted/30">
@@ -152,7 +173,9 @@ export function AddMembersStep({
                 <div>
                   <p className="text-left text-xs text-muted-foreground">Add member email</p>
                   <input
-                    className="w-full rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary/60"
+                    className={`w-full rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary/60 ${
+                      tried && member.email.trim().length === 0 ? "border-red-500/60" : ""
+                    }`}
                     onChange={(e) => onMemberEmailChange(member.id, e.target.value)}
                     placeholder="PayXen login email"
                     type="email"
@@ -193,33 +216,40 @@ export function AddMembersStep({
           Add member
         </button>
 
-        <div className="w-full max-w-xl rounded-md border p-3 text-sm transition-colors hover:bg-muted/10">
+        <div className={`w-full max-w-xl rounded-md border p-3 text-sm transition-colors hover:bg-muted/10 ${
+          tried && !isTotalValid ? "border-red-500/60" : ""
+        }`}>
           <p className={isTotalValid ? "text-green-700" : "text-red-700"}>
             Total percentage: {totalPercentage}% {isTotalValid ? "(valid)" : "(must be 100%)"}
           </p>
         </div>
 
-        <form action={createGroupAction} className="w-full max-w-xl">
+        <form action={createGroupAction} className="w-full max-w-xl" onSubmit={(e) => {
+          if (!isTotalValid || isGroupNameEmpty || !hasAtLeastOneMember) {
+            e.preventDefault();
+            setTried(true);
+            return;
+          }
+        }}>
           <input name="subscriptionId" type="hidden" value={selectedPlan.id} />
           <input name="groupName" type="hidden" value={groupName} />
           <input name="ownerPercentage" type="hidden" value={ownerPct} />
           <input name="members" type="hidden" value={membersPayload} />
-          <CreateGroupButton
-            disabled={!isTotalValid || groupName.trim().length === 0 || !hasAtLeastOneMember}
-          />
+          <CreateGroupButton />
         </form>
       </div>
     </section>
+    </div>
   );
 }
 
-function CreateGroupButton({ disabled }: { disabled: boolean }) {
+function CreateGroupButton() {
   const { pending } = useFormStatus();
 
   return (
     <button
       className="w-full rounded-md bg-black px-4 py-2 text-sm text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-      disabled={disabled || pending}
+      disabled={pending}
       type="submit"
     >
       {pending ? "Creating..." : "Create group"}

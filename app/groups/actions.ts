@@ -796,14 +796,6 @@ export async function editGroupMembersAction(formData: FormData) {
     redirectToExistingGroups({ error: "New member email must belong to PayXen user" });
   }
 
-  const memberLimit = Math.max(1, (groupRow.planMembers ?? 1) - 1);
-  const existingMemberCount = currentSplits.filter((x) => x.role === "MEMBER").length;
-  if (existingMemberCount + normalizedNewMembers.length > memberLimit) {
-    redirectToExistingGroups({
-      error: `This plan allows up to ${memberLimit} member${memberLimit > 1 ? "s" : ""}`,
-    });
-  }
-
   const existingTotal = currentSplits.reduce(
     (sum, split) => sum + (existingMap.get(split.userId) ?? 0),
     0,
