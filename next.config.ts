@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
     // Prevent Next.js from inferring a parent workspace root
     // because of the payxen-monitor subfolder
   },
+  async rewrites() {
+    return [
+      { source: "/health", destination: "/api/health" },
+    ];
+  },
 };
 
 export default nextConfig;
