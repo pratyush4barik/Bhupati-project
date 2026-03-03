@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: [],
   images: {
     remotePatterns: [
       {
@@ -8,6 +9,10 @@ const nextConfig: NextConfig = {
         hostname: "logo.clearbit.com",
       },
     ],
+  },
+  experimental: {
+    // Prevent Next.js from inferring a parent workspace root
+    // because of the payxen-monitor subfolder
   },
 };
 

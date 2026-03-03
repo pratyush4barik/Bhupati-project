@@ -1,7 +1,7 @@
 {
   "name": "payxen-monitor",
-  "version": "1.0.0",
-  "description": "PayXen Monitor desktop focused-time tracking agent",
+  "version": "2.0.0",
+  "description": "PayXen Monitor – Desktop focused-time tracking agent",
   "main": "dist/main/main.js",
   "author": "PayXen",
   "license": "UNLICENSED",
@@ -35,15 +35,18 @@
   "build": {
     "appId": "com.payxen.monitor",
     "productName": "PayXen Monitor",
+    "icon": "build/icon.ico",
     "asar": true,
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "files": [
       "dist/**/*",
       "package.json"
     ],
     "win": {
+      "icon": "build/icon.ico",
       "signAndEditExecutable": false,
       "target": [
         "nsis"
@@ -53,8 +56,13 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PayXen Monitor",
       "runAfterFinish": true,
-      "deleteAppDataOnUninstall": true
+      "deleteAppDataOnUninstall": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico"
     }
   }
 }

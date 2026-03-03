@@ -17,15 +17,22 @@ let isQuitting = false;
 
 const controller = new MonitorController();
 
-function getTrayIcon() {
-  // 16x16 blue square icon
+function getAppIcon() {
+  // Try ICO first, then PNG, then fallback
+  for (const ext of ["icon.ico", "icon.png"]) {
+    const p = path.join(__dirname, "..", "..", "build", ext);
+    try {
+      const img = nativeImage.createFromPath(p);
+      if (!img.isEmpty()) return img;
+    } catch { /* try next */ }
+  }
   return nativeImage.createFromDataURL(
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIUlEQVQ4T2NkoBAwUqifYdQABhqG0QCsQYIhQxGoAAAOXwE6hO8fYQAAAABJRU5ErkJggg==",
   );
 }
 
 function createTray() {
-  tray = new Tray(getTrayIcon());
+  tray = new Tray(getAppIcon().resize({ width: 16, height: 16 }));
   tray.setToolTip("PayXen Monitor");
   tray.setContextMenu(
     Menu.buildFromTemplate([
@@ -67,6 +74,7 @@ function createWindow() {
     minWidth: 980,
     minHeight: 640,
     title: "PayXen Monitor",
+    icon: getAppIcon(),
     backgroundColor: "#09090b",
     autoHideMenuBar: true,
     webPreferences: {
