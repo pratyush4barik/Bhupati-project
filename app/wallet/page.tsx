@@ -12,7 +12,9 @@ import {
   withdrawMoneyAction,
 } from "@/app/wallet/actions";
 import { PendingStatusRefresher } from "@/app/wallet/pending-status-refresher";
+import { PinGatedForm } from "@/app/wallet/pin-gated-form";
 import { PxIdCopyButton } from "@/app/wallet/pxid-copy-button";
+import { WalletPinSection } from "@/app/wallet/wallet-pin-section";
 import { WalletSubmitButton } from "@/app/wallet/wallet-submit-button";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
@@ -32,6 +34,8 @@ type WalletPageProps = {
   searchParams?: Promise<{
     success?: string;
     error?: string;
+    setPin?: string;
+    returnTo?: string;
   }>;
 };
 
@@ -200,6 +204,9 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                 </p>
               </div>
             </div>
+            <div className="mt-4 border-t pt-4">
+              <WalletPinSection hasPin={!!userWallet.pinHash} returnTo={query.returnTo} />
+            </div>
           </section>
 
           <section className="grid gap-4 sm:grid-cols-2">
@@ -210,7 +217,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                 <br />
                 wallet balance.
               </p>
-              <form action={addMoneyAction} className="flex gap-3">
+              <PinGatedForm action={addMoneyAction} hasPin={!!userWallet.pinHash} showPayingAnimation={false} className="flex gap-3">
                 <input
                   className="w-full rounded-md border px-3 py-2 text-sm"
                   min="0.01"
@@ -225,7 +232,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                   idleLabel="Add"
                   pendingLabel="Adding..."
                 />
-              </form>
+              </PinGatedForm>
             </article>
 
             <article className="rounded-xl border p-4 sm:p-6">
@@ -233,7 +240,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
               <p className="mb-4 min-h-10 text-sm text-muted-foreground">
                 Sends wallet money to your bank and records the transfer history.
               </p>
-              <form action={withdrawMoneyAction} className="flex gap-3">
+              <PinGatedForm action={withdrawMoneyAction} hasPin={!!userWallet.pinHash} showPayingAnimation={false} className="flex gap-3">
                 <input
                   className="w-full rounded-md border px-3 py-2 text-sm"
                   min="0.01"
@@ -248,7 +255,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                   idleLabel="Withdraw"
                   pendingLabel="Withdrawing..."
                 />
-              </form>
+              </PinGatedForm>
             </article>
 
             <article className="rounded-xl border p-4 sm:p-6">
@@ -256,7 +263,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
               <p className="mb-4 text-sm text-muted-foreground">
                 Use receiver `px-id` to transfer instantly.
               </p>
-              <form action={transferByPxIdAction} className="space-y-3">
+              <PinGatedForm action={transferByPxIdAction} hasPin={!!userWallet.pinHash} className="space-y-3">
                 <input
                   className="w-full rounded-md border px-3 py-2 text-sm"
                   name="target"
@@ -280,7 +287,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                     pendingLabel="Transferring..."
                   />
                 </div>
-              </form>
+              </PinGatedForm>
             </article>
 
             <article className="rounded-xl border p-4 sm:p-6">

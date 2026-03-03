@@ -34,8 +34,10 @@ import {
   registerServiceAccountAction,
 } from "@/app/subscriptions/actions";
 import { CancelSubscriptionButton } from "@/app/subscriptions/cancel-button";
+import { CheckoutPersist } from "@/app/subscriptions/checkout-persist";
 import { CheckoutSubmitButton } from "@/app/subscriptions/checkout-submit-button";
 import { PlanNextButton } from "@/app/subscriptions/plan-next-button";
+import { PinGatedForm } from "@/app/wallet/pin-gated-form";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
 import { SiteHeader } from "@/app/dashboard-01/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -116,6 +118,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
   const session = await requireSession();
   const query = (await searchParams) ?? {};
   const currentStep = Math.min(4, Math.max(1, Number.parseInt(query.step ?? "1", 10) || 1));
+  const hasExplicitStep = query.step !== undefined;
   const mode = query.mode === "register" ? "register" : "login";
   const trialEligible = query.trialEligible === "1";
 
@@ -231,6 +234,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
       <SidebarInset>
         <SiteHeader title="Subscriptions" />
         <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
+          <CheckoutPersist currentStep={currentStep} hasExplicitStep={hasExplicitStep} paymentSuccess={!!query.success} />
           {query.success ? <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">{query.success}</p> : null}
           {query.error ? <p className="rounded-lg border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-400">{query.error}</p> : null}
 
@@ -384,12 +388,12 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                     <article className="rounded-lg border p-4"><p className="text-sm text-muted-foreground">Plan Details</p><p className="mt-2 font-medium">{selectedPlan.name}</p><p className="text-sm text-muted-foreground">Duration: {selectedPlan.durationMonths} month{selectedPlan.durationMonths > 1 ? "s" : ""}</p><p className="text-sm text-muted-foreground">Members: {selectedPlan.members}</p></article>
                     <article className="rounded-lg border p-4"><p className="text-sm text-muted-foreground">Price Summary</p><div className="mt-2 space-y-1 text-sm"><p>Base price: {formatInr(checkoutBase)}</p><p>GST (18%): {formatInr(checkoutGst)}</p><hr className="my-2 border-t" /><p className="font-medium">Final total: {formatInr(checkoutTotal)}</p><p className="text-muted-foreground">Wallet balance: {formatInr(userWallet?.balance ?? "0")}</p>{useFreeTrial ? <p className="text-green-700">Free trial active: charged {formatInr(selectedService.basePrice)} after 1 month.</p> : null}</div></article>
                   </div>
-                  <form action={checkoutSubscriptionAction} className="mt-4">
+                  <PinGatedForm action={checkoutSubscriptionAction} hasPin={!!userWallet?.pinHash} className="mt-4">
                     <input name="serviceKey" type="hidden" value={selectedService.key} />
                     <input name="accountId" type="hidden" value={selectedAccount.id} />
                     <input name="planCode" type="hidden" value={selectedPlan.code} />
                     <CheckoutSubmitButton />
-                  </form>
+                  </PinGatedForm>
                 </div>
               )}
             </section>

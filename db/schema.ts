@@ -152,6 +152,7 @@ export const wallet = pgTable("wallet", {
   balance: numeric("balance", { precision: 14, scale: 2 })
     .default("0")
     .notNull(),
+  pinHash: text("pin_hash"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

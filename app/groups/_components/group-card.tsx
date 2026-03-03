@@ -14,6 +14,7 @@ import {
   updateGroupPasswordAction,
 } from "@/app/groups/actions";
 import { GroupCredentials } from "@/app/groups/_components/group-credentials";
+import { PinGatedForm } from "@/app/wallet/pin-gated-form";
 import { getServiceMeta } from "@/app/groups/service-meta";
 import type { GroupCardView, GroupPaymentStatus } from "@/app/groups/types";
 
@@ -23,6 +24,7 @@ type GroupCardProps = {
   requestMode?: boolean;
   deletedView?: boolean;
   walletBalance?: string;
+  hasPin?: boolean;
 };
 
 type DraftMember = {
@@ -60,6 +62,7 @@ export function GroupCard({
   requestMode = false,
   deletedView = false,
   walletBalance = "0",
+  hasPin = false,
 }: GroupCardProps) {
   const serviceMeta = getServiceMeta(card.serviceKey);
   const ServiceIcon = serviceMeta?.icon ?? IconUser;
@@ -305,15 +308,15 @@ export function GroupCard({
           ) : null}
 
           {card.viewerStatus === "ACCEPTED" ? (
-            <form action={payGroupRequestAction}>
+            <PinGatedForm action={payGroupRequestAction} hasPin={!!hasPin}>
               <input name="groupSubscriptionId" type="hidden" value={card.groupSubscriptionId} />
               <button
-                className="rounded-md bg-black px-3 py-1.5 text-sm text-white hover:opacity-90"
+                className="rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-black shadow-md hover:opacity-90"
                 type="submit"
               >
                 Pay now
               </button>
-            </form>
+            </PinGatedForm>
           ) : null}
           </div>
           {card.viewerStatus === "ACCEPTED" ? (

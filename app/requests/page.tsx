@@ -9,6 +9,7 @@ import { db } from "@/db";
 import { user, wallet, walletMoneyRequests } from "@/db/schema";
 import { requireSession } from "@/lib/require-session";
 import { payWalletMoneyRequestAction } from "@/app/wallet/actions";
+import { PinGatedForm } from "@/app/wallet/pin-gated-form";
 
 type RequestsPageProps = {
   searchParams?: Promise<{
@@ -23,7 +24,7 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
   const [requestCards, userWallet, walletRequestRows] = await Promise.all([
     getMemberRequestCards(session.user.id),
     db
-      .select({ balance: wallet.balance })
+      .select({ balance: wallet.balance, pinHash: wallet.pinHash })
       .from(wallet)
       .where(eq(wallet.userId, session.user.id))
       .limit(1)
@@ -113,15 +114,15 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
                       <p className="text-sm font-semibold">Amount: {formatInr(item.amount)}</p>
                     </div>
                     <div className="sm:text-right">
-                      <form action={payWalletMoneyRequestAction}>
+                      <PinGatedForm action={payWalletMoneyRequestAction} hasPin={!!userWallet?.pinHash}>
                         <input name="requestId" type="hidden" value={item.id} />
                         <button
-                          className="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground transition-opacity hover:opacity-90"
+                          className="rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-black shadow-md transition-opacity hover:opacity-90"
                           type="submit"
                         >
                           Pay now
                         </button>
-                      </form>
+                      </PinGatedForm>
                       <p className="mt-2 text-xs text-muted-foreground">
                         Wallet balance: {formatInr(userWallet?.balance ?? "0")}
                       </p>
@@ -142,6 +143,7 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
               requestCards.map((card) => (
                 <GroupCard
                   card={card}
+                  hasPin={!!userWallet?.pinHash}
                   key={card.groupSubscriptionId}
                   requestMode
                   showCredentials={false}
