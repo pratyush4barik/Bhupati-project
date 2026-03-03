@@ -90,7 +90,7 @@ export function MonitorControls() {
   }
 
   return (
-    <section className="rounded-2xl border bg-white p-6 shadow-sm">
+    <section className="rounded-2xl border bg-card p-6 shadow-sm">
       <h2 className="text-lg font-semibold">Desktop Connection</h2>
       <p className="mt-2 text-sm text-muted-foreground">
         Generate a secure token and paste it in the PayXen Monitor desktop app to start syncing usage.
@@ -99,7 +99,7 @@ export function MonitorControls() {
       <div className="mt-4 rounded-xl border bg-muted/20 p-4">
         <p className="text-sm font-medium">
           Status:{" "}
-          <span className={status?.connected ? "text-emerald-600" : "text-zinc-700"}>
+          <span className={status?.connected ? "text-emerald-400" : "text-zinc-400"}>
             {statusLabel}
           </span>
         </p>
@@ -138,13 +138,13 @@ export function MonitorControls() {
       </div>
 
       {token ? (
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-amber-700">One-time token</p>
-          <p className="mt-2 break-all rounded-md bg-white p-3 font-mono text-xs">{token}</p>
+        <div className="mt-4 rounded-xl border border-amber-800 bg-amber-950 p-4">
+          <p className="text-xs font-medium uppercase tracking-wide text-amber-400">One-time token</p>
+          <p className="mt-2 break-all rounded-md bg-muted p-3 font-mono text-xs">{token}</p>
         </div>
       ) : null}
 
-      {message ? <p className="mt-4 text-sm text-zinc-700">{message}</p> : null}
+      {message ? <p className="mt-4 text-sm text-muted-foreground">{message}</p> : null}
     </section>
   );
 }

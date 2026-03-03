@@ -72,12 +72,12 @@ export default async function NotificationsPage({ searchParams }: NotificationsP
         />
         <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
           {query.success ? (
-            <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+            <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">
               {query.success}
             </p>
           ) : null}
           {query.error ? (
-            <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <p className="rounded-lg border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-400">
               {query.error}
             </p>
           ) : null}
@@ -104,7 +104,7 @@ export default async function NotificationsPage({ searchParams }: NotificationsP
                     <form action={deleteNotificationAction}>
                       <input name="notificationId" type="hidden" value={item.id} />
                       <button
-                        className="flex h-8 w-8 items-center justify-center rounded-md border border-red-300 text-red-700 transition-colors hover:bg-red-50"
+                        className="flex h-8 w-8 items-center justify-center rounded-md border border-red-800 text-red-400 transition-colors hover:bg-red-950"
                         title="Delete notification"
                         type="submit"
                       >

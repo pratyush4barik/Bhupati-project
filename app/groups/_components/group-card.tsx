@@ -38,20 +38,20 @@ const formatInr = (value: string | number) => {
 };
 
 function statusClass(status: GroupPaymentStatus) {
-  if (status === "PAID") return "text-green-700 bg-green-100";
-  if (status === "REJECTED") return "text-red-700 bg-red-100";
-  if (status === "ACCEPTED") return "text-blue-700 bg-blue-100";
-  if (status === "REMOVED") return "text-red-700 bg-red-100";
-  return "text-yellow-700 bg-yellow-100";
+  if (status === "PAID") return "text-green-400 bg-green-900/40";
+  if (status === "REJECTED") return "text-red-400 bg-red-900/40";
+  if (status === "ACCEPTED") return "text-blue-400 bg-blue-900/40";
+  if (status === "REMOVED") return "text-red-400 bg-red-900/40";
+  return "text-yellow-400 bg-yellow-900/40";
 }
 
 function subscriptionStatusClass(
   status: "ACTIVE" | "PENDING" | "CANCELLED" | "INACTIVE",
 ) {
-  if (status === "ACTIVE") return "bg-green-100 text-green-700";
-  if (status === "PENDING") return "bg-yellow-100 text-yellow-700";
-  if (status === "CANCELLED") return "bg-red-100 text-red-700";
-  return "bg-gray-100 text-gray-700";
+  if (status === "ACTIVE") return "bg-green-900/40 text-green-400";
+  if (status === "PENDING") return "bg-yellow-900/40 text-yellow-400";
+  if (status === "CANCELLED") return "bg-red-900/40 text-red-400";
+  return "bg-zinc-800 text-zinc-300";
 }
 
 export function GroupCard({

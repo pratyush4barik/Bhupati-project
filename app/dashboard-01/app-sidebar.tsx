@@ -40,7 +40,7 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
 
 function SidebarCountBadge({ count }: { count: number }) {
   return (
-    <span className="ml-auto inline-flex min-w-5 items-center justify-center rounded-full border border-zinc-200 bg-zinc-900 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white shadow-sm ring-1 ring-zinc-300/70">
+    <span className="ml-auto inline-flex min-w-5 items-center justify-center rounded-full border border-zinc-700 bg-white px-1.5 py-0.5 text-[10px] font-semibold leading-none text-zinc-900 shadow-sm ring-1 ring-zinc-600/70">
       {count > 99 ? "99+" : count}
     </span>
   )

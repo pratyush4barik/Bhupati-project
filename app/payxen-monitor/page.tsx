@@ -85,7 +85,7 @@ export default async function PayXenMonitorPage() {
           <MonitorControls />
 
           <section className="grid gap-6 lg:grid-cols-2">
-            <article className="rounded-2xl border bg-white p-6 shadow-sm">
+            <article className="rounded-2xl border bg-card p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Installation Guide</h2>
               <ol className="mt-4 space-y-2 text-sm text-muted-foreground">
                 {installationSteps.map((step, index) => (
@@ -95,7 +95,7 @@ export default async function PayXenMonitorPage() {
                 ))}
               </ol>
             </article>
-            <article className="rounded-2xl border bg-white p-6 shadow-sm">
+            <article className="rounded-2xl border bg-card p-6 shadow-sm">
               <h2 className="text-lg font-semibold">System Requirements</h2>
               <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                 {systemRequirements.map((item) => (

@@ -173,12 +173,12 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
           <PendingStatusRefresher shouldRefresh={hasPendingWithdrawal} />
 
           {query.success ? (
-            <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+            <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">
               {query.success}
             </p>
           ) : null}
           {query.error ? (
-            <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <p className="rounded-lg border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-400">
               {query.error}
             </p>
           ) : null}
@@ -221,7 +221,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                   type="number"
                 />
                 <WalletSubmitButton
-                  className="rounded-md bg-black px-4 py-2 text-sm text-white disabled:opacity-60"
+                  className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-60"
                   idleLabel="Add"
                   pendingLabel="Adding..."
                 />
@@ -244,7 +244,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                   type="number"
                 />
                 <WalletSubmitButton
-                  className="rounded-md bg-black px-4 py-2 text-sm text-white disabled:opacity-60"
+                  className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-60"
                   idleLabel="Withdraw"
                   pendingLabel="Withdrawing..."
                 />
@@ -275,7 +275,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                     type="number"
                   />
                   <WalletSubmitButton
-                    className="rounded-md bg-black px-4 py-2 text-sm text-white disabled:opacity-60"
+                  className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-60"
                     idleLabel="Transfer"
                     pendingLabel="Transferring..."
                   />
@@ -290,7 +290,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
               </p>
               <form action={requestMoneyByPxIdAction} className="space-y-3">
                 <input
-                  className="w-full rounded-md border px-3 py-2 text-sm transition-colors hover:border-black"
+                  className="w-full rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary"
                   name="target"
                   placeholder="Receiver px-id (e.g. px-abc123...)"
                   required
@@ -298,7 +298,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                 />
                 <div className="flex gap-3">
                   <input
-                    className="w-full rounded-md border px-3 py-2 text-sm transition-colors hover:border-black"
+                    className="w-full rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary"
                     min="0.01"
                     name="amount"
                     placeholder="Amount (₹)"
@@ -307,7 +307,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                     type="number"
                   />
                   <WalletSubmitButton
-                    className="rounded-md border border-black bg-black px-4 py-2 text-sm text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                    className="rounded-md border border-primary bg-primary px-4 py-2 text-sm text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
                     idleLabel="Request"
                     pendingLabel="Requesting..."
                   />

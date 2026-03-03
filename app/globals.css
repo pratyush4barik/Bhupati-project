@@ -226,8 +226,8 @@
     color: transparent;
     background-image: linear-gradient(
       to right,
-      rgb(24 24 27) calc(var(--about-reveal) * 100%),
-      rgb(113 113 122) calc(var(--about-reveal) * 100%)
+      var(--color-foreground) calc(var(--about-reveal) * 100%),
+      var(--color-muted-foreground) calc(var(--about-reveal) * 100%)
     );
     -webkit-background-clip: text;
     background-clip: text;
@@ -316,7 +316,7 @@
   }
 
   .about-heading-dynamic {
-    color: rgb(24 24 27) !important;
+    color: var(--color-foreground) !important;
     background: none !important;
     -webkit-background-clip: border-box !important;
     background-clip: border-box !important;

@@ -109,9 +109,9 @@ export function UsageAnalytics({
         ) : (
           <ul className="mt-4 space-y-2">
             {inactiveSubscriptions.map((sub) => (
-              <li key={sub.id} className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
+              <li key={sub.id} className="flex items-center justify-between rounded-lg border border-amber-800 bg-amber-950 px-3 py-2">
                 <span className="text-sm font-medium">{sub.serviceName}</span>
-                <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-medium text-amber-900">
+                <span className="rounded-full bg-amber-800 px-2 py-0.5 text-xs font-medium text-amber-200">
                   {sub.status}
                 </span>
               </li>

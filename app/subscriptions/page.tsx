@@ -229,8 +229,8 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
       <SidebarInset>
         <SiteHeader title="Subscriptions" />
         <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
-          {query.success ? <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">{query.success}</p> : null}
-          {query.error ? <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{query.error}</p> : null}
+          {query.success ? <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">{query.success}</p> : null}
+          {query.error ? <p className="rounded-lg border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-400">{query.error}</p> : null}
 
           <section className="rounded-xl border p-6">
             <p className="text-sm font-medium text-muted-foreground">Checkout steps</p>
@@ -282,7 +282,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                       <input className="w-full rounded-md border px-3 py-2 text-sm" name="password" placeholder="Password" required type="password" />
                       <button className="text-xs text-muted-foreground underline" type="button">Forgot password?</button>
                       <label className="flex items-center gap-2 text-xs text-muted-foreground"><input name="termsAccepted" required type="checkbox" />I agree to terms and conditions</label>
-                      <button className="w-full rounded-md bg-black px-4 py-2 text-sm text-white" type="submit">Login</button>
+                      <button className="w-full rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground" type="submit">Login</button>
                     </form>
                   ) : (
                     <form action={registerServiceAccountAction} className="mt-6 space-y-3">
@@ -293,7 +293,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                       <input className="w-full rounded-md border px-3 py-2 text-sm" name="password" placeholder="Password" required type="password" />
                       <input className="w-full rounded-md border px-3 py-2 text-sm" name="confirmPassword" placeholder="Confirm password" required type="password" />
                       <label className="flex items-center gap-2 text-xs text-muted-foreground"><input name="termsAccepted" required type="checkbox" />I agree to terms and conditions</label>
-                      <button className="w-full rounded-md bg-black px-4 py-2 text-sm text-white" type="submit">Sign up</button>
+                      <button className="w-full rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground" type="submit">Sign up</button>
                     </form>
                   )}
                   <p className="mt-4 text-center text-xs text-muted-foreground">or</p>
@@ -373,13 +373,13 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
               <ul className="mt-4 space-y-3">
                 {rows.map((sub) => (
                   <li className="rounded-lg border p-3" key={sub.id}>
-                    <div className="flex items-start justify-between gap-3"><p className="font-medium">{sub.serviceName}</p><span className={sub.status === "ACTIVE" ? "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700" : sub.status === "PENDING" ? "rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700" : "rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700"}>{sub.status}</span></div>
+                    <div className="flex items-start justify-between gap-3"><p className="font-medium">{sub.serviceName}</p><span className={sub.status === "ACTIVE" ? "rounded-full bg-green-900/40 px-2 py-0.5 text-xs font-medium text-green-400" : sub.status === "PENDING" ? "rounded-full bg-yellow-900/40 px-2 py-0.5 text-xs font-medium text-yellow-400" : "rounded-full bg-red-900/40 px-2 py-0.5 text-xs font-medium text-red-400"}>{sub.status}</span></div>
                     <p className="text-sm text-muted-foreground">{formatInr(sub.monthlyCost)} / month | {sub.status}</p>
                     {sub.planName ? <p className="text-xs text-muted-foreground">{sub.planName} | Next billing: {sub.nextBillingDate}</p> : null}
                     {sub.externalAccountEmail ? <p className="text-xs text-muted-foreground">Account: {sub.externalAccountEmail}</p> : null}
                     {sub.freeTrialTaken && sub.freeTrialEndsAt ? <p className="text-xs text-muted-foreground">Free trial ends: {formatDate(new Date(sub.freeTrialEndsAt))}</p> : null}
                     {sub.status === "ACTIVE" || sub.status === "PENDING" ? (
-                      <form action={cancelSubscriptionAction} className="mt-3"><input name="subscriptionId" type="hidden" value={sub.id} /><button className="rounded-md border border-red-300 px-3 py-1 text-xs text-red-700 transition-colors hover:border-red-500 hover:bg-red-50 hover:text-red-800" type="submit">Cancel subscription</button></form>
+                      <form action={cancelSubscriptionAction} className="mt-3"><input name="subscriptionId" type="hidden" value={sub.id} /><button className="rounded-md border border-red-800 px-3 py-1 text-xs text-red-400 transition-colors hover:border-red-600 hover:bg-red-950 hover:text-red-300" type="submit">Cancel subscription</button></form>
                     ) : null}
                   </li>
                 ))}

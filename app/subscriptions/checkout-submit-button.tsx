@@ -7,7 +7,7 @@ export function CheckoutSubmitButton() {
 
   return (
     <button
-      className="rounded-md bg-black px-4 py-2 text-sm text-white disabled:opacity-60"
+      className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-60"
       disabled={pending}
       type="submit"
     >

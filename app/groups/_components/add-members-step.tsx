@@ -136,7 +136,7 @@ export function AddMembersStep({
                 ) : (
                   <>
                     <button
-                      className="flex h-8 w-8 items-center justify-center rounded-md border border-red-300 bg-white text-red-700 transition-colors hover:bg-red-50"
+                      className="flex h-8 w-8 items-center justify-center rounded-md border border-red-800 bg-red-950 text-red-400 transition-colors hover:bg-red-900"
                       onClick={() => onRemoveMember(member.id)}
                       title="Delete member"
                       type="button"

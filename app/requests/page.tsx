@@ -81,12 +81,12 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
         <SiteHeader title="Requests" />
         <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
           {query.success ? (
-            <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+            <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">
               {query.success}
             </p>
           ) : null}
           {query.error ? (
-            <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <p className="rounded-lg border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-400">
               {query.error}
             </p>
           ) : null}
@@ -116,7 +116,7 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
                       <form action={payWalletMoneyRequestAction}>
                         <input name="requestId" type="hidden" value={item.id} />
                         <button
-                          className="rounded-md bg-black px-3 py-1.5 text-sm text-white transition-opacity hover:opacity-90"
+                          className="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground transition-opacity hover:opacity-90"
                           type="submit"
                         >
                           Pay now

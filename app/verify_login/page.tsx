@@ -18,7 +18,7 @@ import { RefreshCwIcon } from "lucide-react"
 
 export default function VerifyLoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-background">
     <Card className="mx-auto max-w-md">
       <CardHeader>
         <CardTitle>Verify your login</CardTitle>
