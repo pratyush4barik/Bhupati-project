@@ -30,6 +30,8 @@ type MonitorApi = {
   setAutoStart: (enabled: boolean) => Promise<RuntimeStatus>;
   setConsentAccepted: (accepted: boolean) => Promise<RuntimeStatus>;
   connectWithToken: (payload: { backendBaseUrl: string; token: string }) => Promise<RuntimeStatus>;
+  loginWithEmail: (payload: { backendBaseUrl: string; email: string; password: string }) => Promise<RuntimeStatus>;
+  loginWithGoogle: (payload: { backendBaseUrl: string }) => Promise<RuntimeStatus>;
   disconnectAccount: () => Promise<RuntimeStatus>;
   deleteLocalData: (serviceName?: string) => Promise<RuntimeStatus>;
   refreshActiveServices: () => Promise<RuntimeStatus>;
@@ -113,13 +115,13 @@ function renderTodaySummary(rows: RuntimeStatus["todaySummary"]) {
   list.innerHTML = "";
   if (rows.length === 0) {
     const li = document.createElement("li");
-    li.textContent = "No focused usage yet today.";
+    li.textContent = "No focused usage recorded yet today.";
     list.appendChild(li);
     return;
   }
   rows.forEach((row) => {
     const li = document.createElement("li");
-    li.textContent = `${row.serviceName}: ${row.minutes} min`;
+    li.innerHTML = `<span style="flex:1">${row.serviceName}</span><span style="font-weight:500;color:#fafafa">${row.minutes} min</span>`;
     list.appendChild(li);
   });
 }
@@ -142,15 +144,15 @@ function renderUsageCards(cards: RuntimeStatus["activeServiceCards"]) {
     wrapper.innerHTML = `
       <div class="usage-top">
         <div class="app-chip">
-          <span class="service-icon">${serviceIcons[card.serviceName] ?? "*"}</span>
+          <span class="service-icon">${serviceIcons[card.serviceName] ?? "•"}</span>
           <span>${card.serviceName}</span>
         </div>
-        <button class="icon-button service-clear" data-service="${card.serviceName}" title="Clear local unsynced data">X</button>
+        <button class="icon-button service-clear" data-service="${card.serviceName}" title="Clear local unsynced data">✕</button>
       </div>
-      <div class="row"><strong>Next Billing:</strong> ${formatDate(card.nextBillingDate)}</div>
-      <div class="row"><strong>Last Used:</strong> ${formatDateTime(card.lastUsedAt)}</div>
-      <div class="row"><strong>Focused Today:</strong> ${card.focusedMinutesToday} min</div>
-      <div class="row"><strong>Unsynced:</strong> ${card.unsyncedMinutes} min</div>
+      <div class="row"><strong>Next Billing</strong> <span>${formatDate(card.nextBillingDate)}</span></div>
+      <div class="row"><strong>Last Used</strong> <span>${formatDateTime(card.lastUsedAt)}</span></div>
+      <div class="row"><strong>Focused Today</strong> <span>${card.focusedMinutesToday} min</span></div>
+      <div class="row"><strong>Unsynced</strong> <span>${card.unsyncedMinutes} min</span></div>
     `;
     usageCards.appendChild(wrapper);
   });
@@ -176,7 +178,7 @@ function renderAuthView(state: RuntimeStatus) {
 
   profileImage.src =
     state.profile.image ||
-    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Crect width='56' height='56' rx='28' fill='%23cbd5e1'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%230f172a' font-size='18' font-family='Segoe UI'%3E%3F%3C/text%3E%3C/svg%3E";
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Crect width='56' height='56' rx='28' fill='%2327272a'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23a1a1aa' font-size='18' font-family='Segoe UI'%3E%3F%3C/text%3E%3C/svg%3E";
   profileGreeting.textContent = `Hi ${state.profile.name}`;
   profileEmail.textContent = state.profile.email;
 }
@@ -188,7 +190,7 @@ function renderState(state: RuntimeStatus) {
   const connectionBadge = byId<HTMLSpanElement>("connection-badge");
   if (connectionBadge) {
     connectionBadge.textContent = state.connected ? "Connected" : "Disconnected";
-    connectionBadge.style.color = state.connected ? "#166534" : "#64748b";
+    connectionBadge.style.color = state.connected ? "#4ade80" : "#71717a";
   }
 
   const sidebarServiceStatus = byId<HTMLParagraphElement>("sidebar-service-status");

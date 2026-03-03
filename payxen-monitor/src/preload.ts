@@ -13,6 +13,10 @@ const api = {
     ipcRenderer.invoke("monitor:set-consent-accepted", accepted) as Promise<RuntimeStatus>,
   connectWithToken: (payload: { backendBaseUrl: string; token: string }) =>
     ipcRenderer.invoke("monitor:connect-with-token", payload) as Promise<RuntimeStatus>,
+  loginWithEmail: (payload: { backendBaseUrl: string; email: string; password: string }) =>
+    ipcRenderer.invoke("monitor:login-email", payload) as Promise<RuntimeStatus>,
+  loginWithGoogle: (payload: { backendBaseUrl: string }) =>
+    ipcRenderer.invoke("monitor:login-google", payload) as Promise<RuntimeStatus>,
   disconnectAccount: () =>
     ipcRenderer.invoke("monitor:disconnect-account") as Promise<RuntimeStatus>,
   deleteLocalData: (serviceName?: ActiveServiceUsageCard["serviceName"]) =>

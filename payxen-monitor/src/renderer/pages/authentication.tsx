@@ -7,8 +7,8 @@ function AuthenticationPage() {
   return (
     <Shell page="authentication">
       <article className="card">
-        <h3>Monitor Authentication</h3>
-        <p className="muted">Connect this desktop app with your PayXen account using monitor JWT.</p>
+        <h3>Account Connection</h3>
+        <p className="muted">Link this desktop agent to your PayXen account using a monitor JWT token.</p>
 
         <div id="auth-form">
           <label className="field">
@@ -21,17 +21,17 @@ function AuthenticationPage() {
           </label>
           <div className="button-row">
             <button id="connect-token" className="button">
-              Connect
+              Connect Account
             </button>
           </div>
           <p id="auth-connecting" className="muted hidden">
-            Verifying token...
+            Verifying token…
           </p>
         </div>
 
         <div id="auth-profile" className="profile hidden">
-          <button id="remove-auth" className="icon-button" title="Remove auth">
-            X
+          <button id="remove-auth" className="icon-button" title="Disconnect account">
+            ✕
           </button>
           <img id="profile-image" src="" alt="Profile" className="avatar" />
           <div>

@@ -5,10 +5,10 @@ import { Shell } from "./layout";
 
 function HomePage() {
   return (
-    <Shell page="home" titleSubtitle="Focused-time tracking for approved services only. No browsing history capture.">
+    <Shell page="home" titleSubtitle="Focused-time tracking for approved services only. Your browsing history is never captured.">
       <article id="consent-card" className="card">
-        <h3>Installation Consent</h3>
-        <p className="muted">Tracking can start only after consent is accepted.</p>
+        <h3>Privacy Consent</h3>
+        <p className="muted">Usage tracking requires your explicit consent before it can begin.</p>
         <label className="checkbox-row">
           <input id="consent-checkbox" type="checkbox" />
           <span>I agree to focused service-level tracking under PayXen Terms and Privacy Policy.</span>
@@ -25,7 +25,7 @@ function HomePage() {
 
       <div className="grid-2">
         <article className="card">
-          <h3>Tracking Controls</h3>
+          <h3>Tracking Status</h3>
           <div className="row">
             <strong>Tracking Service:</strong> <span id="tracking-service-state">Active</span>
           </div>
@@ -51,7 +51,7 @@ function HomePage() {
         </article>
 
         <article className="card">
-          <h3>Today&apos;s Usage Summary</h3>
+          <h3>Today’s Activity</h3>
           <ul id="today-summary" className="list"></ul>
         </article>
       </div>

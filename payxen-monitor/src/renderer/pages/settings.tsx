@@ -7,17 +7,18 @@ function SettingsPage() {
   return (
     <Shell page="settings">
       <article className="card">
-        <h3>Settings</h3>
+        <h3>Preferences</h3>
+        <p className="muted">Configure how PayXen Monitor behaves on your machine.</p>
         <label className="checkbox-row">
           <input id="auto-start" type="checkbox" />
-          <span>Start PayXen Monitor automatically on Windows login</span>
+          <span>Launch PayXen Monitor automatically on Windows login</span>
         </label>
         <div className="button-row">
           <button id="clear-local-data" className="button button-ghost">
-            Delete Local Unsynced Data
+            Clear Local Data
           </button>
         </div>
-        <p className="muted small">More settings will be added in future releases.</p>
+        <p className="muted small">Additional preferences will be available in upcoming releases.</p>
         <p id="sync-error" className="error hidden"></p>
       </article>
     </Shell>

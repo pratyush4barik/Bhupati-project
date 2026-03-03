@@ -12,10 +12,7 @@ async function buildRenderer() {
 
   await esbuild.build({
     entryPoints: {
-      home: path.join(sourceDir, "pages", "home.tsx"),
-      authentication: path.join(sourceDir, "pages", "authentication.tsx"),
-      usage: path.join(sourceDir, "pages", "usage.tsx"),
-      settings: path.join(sourceDir, "pages", "settings.tsx"),
+      "app-shell": path.join(sourceDir, "pages", "app-shell.tsx"),
     },
     bundle: true,
     format: "esm",
@@ -28,10 +25,6 @@ async function buildRenderer() {
 
   const staticFiles = [
     "index.html",
-    "home.html",
-    "authentication.html",
-    "usage.html",
-    "settings.html",
     "renderer.css",
   ];
 

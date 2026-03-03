@@ -72,6 +72,41 @@ export class MonitorController extends EventEmitter {
     return this.getRuntimeStatus();
   }
 
+  async loginWithEmail(input: { backendBaseUrl: string; email: string; password: string }) {
+    const backendBaseUrl = input.backendBaseUrl.trim();
+    if (!backendBaseUrl) throw new Error("Backend URL is required.");
+    if (!input.email.trim()) throw new Error("Email is required.");
+    if (!input.password) throw new Error("Password is required.");
+
+    const result = await this.authClient.loginWithEmail({
+      baseUrl: backendBaseUrl,
+      email: input.email.trim(),
+      password: input.password,
+    });
+
+    this.updateSettings({
+      token: result.token,
+      backendBaseUrl,
+      profile: result.user,
+    });
+    await this.refreshActiveServices();
+    return this.getRuntimeStatus();
+  }
+
+  connectWithProvisionResult(input: {
+    backendBaseUrl: string;
+    token: string;
+    user: { id: string; name: string; email: string; image: string | null };
+  }) {
+    this.updateSettings({
+      token: input.token,
+      backendBaseUrl: input.backendBaseUrl,
+      profile: input.user,
+    });
+    void this.refreshActiveServices();
+    return this.getRuntimeStatus();
+  }
+
   disconnectAccount() {
     this.updateSettings({
       token: null,

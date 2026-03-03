@@ -67,12 +67,16 @@ function createWindow() {
     minWidth: 980,
     minHeight: 640,
     title: "PayXen Monitor",
+    backgroundColor: "#09090b",
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
     },
   });
+
+  mainWindow.setMenuBarVisibility(false);
 
   const htmlPath = path.join(__dirname, "..", "renderer", "index.html");
   void mainWindow.loadFile(htmlPath);
@@ -145,6 +149,85 @@ function registerIpcHandlers() {
         token: payload.token,
       });
       return state;
+    },
+  );
+
+  ipcMain.handle(
+    "monitor:login-email",
+    async (_event, payload: { backendBaseUrl: string; email: string; password: string }) => {
+      const backendBaseUrl = payload.backendBaseUrl.trim();
+      if (!validateBackendUrl(backendBaseUrl)) {
+        throw new Error("Backend URL must be HTTPS. Use http://localhost for local development.");
+      }
+      const state = await controller.loginWithEmail({
+        backendBaseUrl,
+        email: payload.email,
+        password: payload.password,
+      });
+      return state;
+    },
+  );
+
+  ipcMain.handle(
+    "monitor:login-google",
+    async (_event, payload: { backendBaseUrl: string }) => {
+      const backendBaseUrl = payload.backendBaseUrl.trim();
+      if (!validateBackendUrl(backendBaseUrl)) {
+        throw new Error("Backend URL must be HTTPS. Use http://localhost for local development.");
+      }
+
+      return new Promise<ReturnType<typeof controller.getRuntimeStatus>>((resolve, reject) => {
+        const callbackUrl = new URL("/api/monitor/provision/google-callback", backendBaseUrl).toString();
+        const googleStartUrl = new URL("/api/monitor/provision/google-start", backendBaseUrl);
+        googleStartUrl.searchParams.set("callbackURL", callbackUrl);
+
+        const authWin = new BrowserWindow({
+          width: 520,
+          height: 700,
+          parent: mainWindow ?? undefined,
+          modal: true,
+          title: "Sign in with Google",
+          backgroundColor: "#09090b",
+          webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+          },
+        });
+        authWin.setMenuBarVisibility(false);
+        void authWin.loadURL(googleStartUrl.toString());
+
+        let settled = false;
+
+        /* Listen for the callback page that sets the document title */
+        authWin.webContents.on("page-title-updated", (_titleEvent, title) => {
+          if (!title.startsWith("PAYXEN_AUTH_RESULT:")) return;
+          settled = true;
+          try {
+            const jsonStr = title.slice("PAYXEN_AUTH_RESULT:".length);
+            const data = JSON.parse(jsonStr) as {
+              token: string;
+              expiresAt: string;
+              user: { id: string; name: string; email: string; image: string | null };
+            };
+            const state = controller.connectWithProvisionResult({
+              backendBaseUrl,
+              token: data.token,
+              user: data.user,
+            });
+            resolve(state);
+          } catch (error) {
+            reject(error instanceof Error ? error : new Error("Google login failed."));
+          } finally {
+            authWin.close();
+          }
+        });
+
+        authWin.on("closed", () => {
+          if (!settled) {
+            reject(new Error("Google login was cancelled."));
+          }
+        });
+      });
     },
   );
 

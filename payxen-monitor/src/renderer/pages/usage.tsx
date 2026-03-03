@@ -9,8 +9,8 @@ function UsagePage() {
       <article className="card">
         <div className="split-head">
           <div>
-            <h3>Active Subscription Usage</h3>
-            <p className="muted">Shows active subscriptions only, plus today&apos;s focused usage.</p>
+            <h3>Subscription Usage</h3>
+            <p className="muted">Displays active subscriptions and today’s focused session time.</p>
           </div>
           <button id="refresh-usage" className="button button-ghost">
             Refresh
