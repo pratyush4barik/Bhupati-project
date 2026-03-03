@@ -453,6 +453,30 @@ export const usageLogs = pgTable(
   }),
 );
 
+export const ghostAgentRules = pgTable(
+  "ghost_agent_rules",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    subscriptionId: uuid("subscription_id")
+      .notNull()
+      .references(() => subscriptions.id, { onDelete: "cascade" }),
+    enabled: boolean("enabled").default(false).notNull(),
+    minUsageMinutes: integer("min_usage_minutes").default(60).notNull(),
+    freeTrialAutoCancel: boolean("free_trial_auto_cancel").default(false).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    userSubIdx: uniqueIndex("ghost_agent_rules_user_sub_idx").on(
+      table.userId,
+      table.subscriptionId,
+    ),
+  }),
+);
+
 export const groupMemberSettlements = pgTable(
   "group_member_settlements",
   {
