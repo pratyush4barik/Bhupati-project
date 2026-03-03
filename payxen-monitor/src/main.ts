@@ -87,6 +87,12 @@ function createWindow() {
     mainWindow?.hide();
   });
 
+  /* Re-send current status whenever the window is brought back,
+     so the renderer always has the latest connected/token state. */
+  mainWindow.on("show", () => {
+    emitStatusToRenderer();
+  });
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });

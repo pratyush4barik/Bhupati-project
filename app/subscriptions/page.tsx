@@ -223,7 +223,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
 
   return (
     <SidebarProvider
-      style={{ "--sidebar-width": "calc(var(--spacing) * 72)", "--header-height": "calc(var(--spacing) * 12)" } as React.CSSProperties}
+      style={{ "--sidebar-width": "calc(var(--spacing) * 60)", "--header-height": "calc(var(--spacing) * 12)" } as React.CSSProperties}
     >
       <AppSidebar user={{ name: session.user.name ?? "User", email: session.user.email }} variant="inset" />
       <SidebarInset>

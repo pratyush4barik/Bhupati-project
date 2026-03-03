@@ -7,6 +7,8 @@ import { SiteHeader } from "@/app/dashboard-01/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { requireSession } from "@/lib/require-session";
 import { MonitorControls } from "@/app/payxen-monitor/monitor-controls";
+import { PwaInstallSection } from "@/app/payxen-monitor/pwa-install-section";
+import { InstallWebAppButton } from "@/app/payxen-monitor/install-web-app-button";
 
 const installationSteps = [
   "Download the Windows installer.",
@@ -32,7 +34,7 @@ export default async function PayXenMonitorPage() {
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--sidebar-width": "calc(var(--spacing) * 60)",
           "--header-height": "calc(var(--spacing) * 12)",
         } as React.CSSProperties
       }
@@ -79,10 +81,13 @@ export default async function PayXenMonitorPage() {
               >
                 Terms and Conditions
               </Link>
+              <InstallWebAppButton />
             </div>
           </section>
 
           <MonitorControls />
+
+          <PwaInstallSection />
 
           <section className="grid gap-6 lg:grid-cols-2">
             <article className="rounded-2xl border bg-card p-6 shadow-sm">

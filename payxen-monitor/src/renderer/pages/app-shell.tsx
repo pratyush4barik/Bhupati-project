@@ -570,11 +570,31 @@ function App() {
       setReady(true);
     });
 
-    /* Also listen for disconnect events */
+    /* Listen for status updates (disconnect, reconnect, window re-show) */
     const off = window.payxenMonitor.onStatus((status) => {
       setConnected(status.connected);
     });
-    return off;
+
+    /* Re-check persisted state whenever the window regains visibility
+       (covers hide → show from tray, taskbar click, Alt-Tab, etc.) */
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        window.payxenMonitor.getState().then((state) => {
+          setConnected(state.connected);
+        });
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("focus", () => {
+      window.payxenMonitor.getState().then((state) => {
+        setConnected(state.connected);
+      });
+    });
+
+    return () => {
+      off();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, []);
 
   const handleConnected = useCallback(() => {
