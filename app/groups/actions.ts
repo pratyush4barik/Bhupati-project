@@ -134,13 +134,6 @@ export async function createGroupAction(formData: FormData) {
           .limit(1)
       : [null];
 
-  const memberLimit = Math.max(1, (subscription.planMembers ?? 1) - 1);
-  if (members.length > memberLimit) {
-    redirectToGroups({
-      error: `This plan allows up to ${memberLimit} member${memberLimit > 1 ? "s" : ""}`,
-    });
-  }
-
   const uniqueEmails = Array.from(new Set(members.map((member) => member.email)));
   if (uniqueEmails.length !== members.length) {
     redirectToGroups({ error: "Duplicate member emails are not allowed" });
