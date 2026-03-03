@@ -228,13 +228,13 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
       <AppSidebar user={{ name: session.user.name ?? "User", email: session.user.email }} variant="inset" />
       <SidebarInset>
         <SiteHeader title="Subscriptions" />
-        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
+        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
           {query.success ? <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">{query.success}</p> : null}
           {query.error ? <p className="rounded-lg border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-400">{query.error}</p> : null}
 
-          <section className="rounded-xl border p-6">
+          <section className="rounded-xl border p-4 sm:p-6">
             <p className="text-sm font-medium text-muted-foreground">Checkout steps</p>
-            <div className="mt-4 grid gap-3 md:grid-cols-4">
+            <div className="mt-4 grid gap-2 grid-cols-2 sm:gap-3 md:grid-cols-4">
               {checkoutSteps.map((step, index) => (
                 <div key={step} className={`rounded-lg border p-3 text-sm ${index + 1 === currentStep ? "border-primary bg-primary/5 font-medium" : "text-muted-foreground"}`}>
                   {index + 1}. {step}
@@ -244,7 +244,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
           </section>
 
           {currentStep === 1 ? (
-            <section className="rounded-xl border p-6">
+            <section className="rounded-xl border p-4 sm:p-6">
               <h2 className="text-lg font-semibold">Step 1: Choose Subscription</h2>
               <p className="mt-1 text-sm text-muted-foreground">Select an app or website to continue.</p>
               <div className="mt-6 space-y-6">
@@ -257,7 +257,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
                           <input name="step" type="hidden" value="2" />
                           <input name="service" type="hidden" value={service.key} />
                           <input name="mode" type="hidden" value="login" />
-                          <button className="flex min-w-[220px] items-center gap-3 rounded-lg border bg-background px-3 py-2 text-left transition-colors hover:bg-muted/60" type="submit">
+                          <button className="flex min-w-[180px] items-center gap-3 rounded-lg border bg-background px-3 py-2 text-left transition-colors hover:bg-muted/60 sm:min-w-[220px]" type="submit">
                             <span className="flex h-8 w-8 items-center justify-center rounded-md border bg-muted/30"><service.icon className="h-5 w-5" style={{ color: service.color }} /></span>
                             <span className="text-sm font-medium">{service.name}</span>
                           </button>
@@ -271,9 +271,9 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
           ) : null}
 
           {currentStep === 2 ? (
-            <section className="rounded-xl border p-6">
+            <section className="rounded-xl border p-4 sm:p-6">
               {!selectedService ? <p className="text-sm text-muted-foreground">Please select a service in Step 1.</p> : (
-                <div className="mx-auto max-w-md rounded-xl border p-6">
+                <div className="mx-auto max-w-md rounded-xl border p-4 sm:p-6">
                   <div className="text-center"><span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border bg-muted/30"><selectedService.icon className="h-7 w-7" style={{ color: selectedService.color }} /></span><p className="mt-3 text-lg font-semibold">{selectedService.name}</p></div>
                   {mode === "login" ? (
                     <form action={loginServiceAccountAction} className="mt-6 space-y-3">
@@ -304,7 +304,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
           ) : null}
 
           {currentStep === 3 ? (
-            <section className="rounded-xl border p-6">
+            <section className="rounded-xl border p-4 sm:p-6">
               {!selectedService ? <p className="text-sm text-muted-foreground">Please choose a service first.</p> : !selectedAccount ? <p className="text-sm text-muted-foreground">Please login or register for this service first.</p> : (
                 <div>
                   <h2 className="text-lg font-semibold">Step 3: Choose Plan</h2>
@@ -347,7 +347,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
           ) : null}
 
           {currentStep === 4 ? (
-            <section className="rounded-xl border p-6">
+            <section className="rounded-xl border p-4 sm:p-6">
               {!selectedService || !selectedAccount || !selectedPlan ? <p className="text-sm text-muted-foreground">Missing checkout details. Please complete Steps 1 to 3.</p> : (
                 <div>
                   <h2 className="text-lg font-semibold">Step 4: Checkout</h2>
@@ -367,13 +367,13 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
             </section>
           ) : null}
 
-          <section className="rounded-xl border p-6">
+          <section className="rounded-xl border p-4 sm:p-6">
             <h2 className="text-lg font-semibold">Your Existing Subscriptions</h2>
             {rows.length === 0 ? <p className="mt-2 text-sm text-muted-foreground">No subscriptions found.</p> : (
               <ul className="mt-4 space-y-3">
                 {rows.map((sub) => (
-                  <li className="rounded-lg border p-3" key={sub.id}>
-                    <div className="flex items-start justify-between gap-3"><p className="font-medium">{sub.serviceName}</p><span className={sub.status === "ACTIVE" ? "rounded-full bg-green-900/40 px-2 py-0.5 text-xs font-medium text-green-400" : sub.status === "PENDING" ? "rounded-full bg-yellow-900/40 px-2 py-0.5 text-xs font-medium text-yellow-400" : "rounded-full bg-red-900/40 px-2 py-0.5 text-xs font-medium text-red-400"}>{sub.status}</span></div>
+                   <li className="rounded-lg border p-3" key={sub.id}>
+                    <div className="flex items-start justify-between gap-2"><p className="min-w-0 truncate font-medium">{sub.serviceName}</p><span className={sub.status === "ACTIVE" ? "rounded-full bg-green-900/40 px-2 py-0.5 text-xs font-medium text-green-400" : sub.status === "PENDING" ? "rounded-full bg-yellow-900/40 px-2 py-0.5 text-xs font-medium text-yellow-400" : "rounded-full bg-red-900/40 px-2 py-0.5 text-xs font-medium text-red-400"}>{sub.status}</span></div>
                     <p className="text-sm text-muted-foreground">{formatInr(sub.monthlyCost)} / month | {sub.status}</p>
                     {sub.planName ? <p className="text-xs text-muted-foreground">{sub.planName} | Next billing: {sub.nextBillingDate}</p> : null}
                     {sub.externalAccountEmail ? <p className="text-xs text-muted-foreground">Account: {sub.externalAccountEmail}</p> : null}

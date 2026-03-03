@@ -35,7 +35,7 @@ function StatCard({ label, value, change, trending, icon: Icon, accent }: StatCa
         </div>
       </CardHeader>
       <CardContent>
-        <CardTitle className="text-2xl font-bold tabular-nums tracking-tight lg:text-3xl">
+        <CardTitle className="text-xl font-bold tabular-nums tracking-tight sm:text-2xl lg:text-3xl">
           {value}
         </CardTitle>
         <div className="mt-1 flex items-center gap-1.5 text-xs">
@@ -81,19 +81,19 @@ export function StatCards({
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <StatCard
+        label="Subscription Spending"
+        value={formatInr(totalSpending)}
+        change={`${spendingChange >= 0 ? "+" : ""}${spendingChange.toFixed(1)}%`}
+        trending={spendingChange >= 0 ? "up" : "down"}
+        icon={IconReceipt}
+        accent="bg-violet-500/20 text-violet-400"
+      />
+      <StatCard
         label="Wallet Balance"
         value={formatInr(walletBalance)}
         change={`${spendingChange >= 0 ? "+" : ""}${spendingChange.toFixed(1)}%`}
         trending={spendingChange >= 0 ? "up" : "down"}
         icon={IconWallet}
-        accent="bg-violet-500/20 text-violet-400"
-      />
-      <StatCard
-        label="Total Spending"
-        value={formatInr(totalSpending)}
-        change={`${spendingChange >= 0 ? "+" : ""}${spendingChange.toFixed(1)}%`}
-        trending={spendingChange >= 0 ? "up" : "down"}
-        icon={IconReceipt}
         accent="bg-sky-500/20 text-sky-400"
       />
       <StatCard

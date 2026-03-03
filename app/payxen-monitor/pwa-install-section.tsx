@@ -44,7 +44,7 @@ export function PwaInstallSection() {
   };
 
   return (
-    <section className="rounded-2xl border bg-gradient-to-br from-violet-950/40 to-zinc-900 p-6 shadow-sm">
+    <section className="rounded-2xl border bg-gradient-to-br from-violet-950/40 to-zinc-900 p-4 shadow-sm sm:p-6">
       <div className="flex items-start gap-4">
         {/* Icon */}
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-600/20">

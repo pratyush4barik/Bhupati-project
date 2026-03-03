@@ -48,7 +48,7 @@ export function UsageAnalytics({
 }: UsageAnalyticsProps) {
   return (
     <div className="space-y-6">
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
         <article className="rounded-xl border p-5">
           <p className="text-sm text-muted-foreground">Monthly Focused Time</p>
           <p className="mt-2 text-2xl font-semibold">{formatMinutes(monthMinutes)}</p>
@@ -63,13 +63,12 @@ export function UsageAnalytics({
         </article>
       </section>
 
-      <section className="rounded-xl border p-6">
-        <h2 className="text-lg font-semibold">Daily Focused Time (Last 30 Days)</h2>
+      <section className="rounded-xl border p-4 sm:p-6">
         <p className="mt-1 text-sm text-muted-foreground">
           Includes only currently active subscriptions.
         </p>
         <div className="mt-5">
-          <ChartContainer config={chartConfig} className="h-[300px] w-full">
+          <ChartContainer config={chartConfig} className="h-[220px] w-full sm:h-[300px]">
             <BarChart accessibilityLayer data={dailyData}>
               <CartesianGrid vertical={false} />
               <XAxis
@@ -86,7 +85,7 @@ export function UsageAnalytics({
         </div>
       </section>
 
-      <section className="rounded-xl border p-6">
+      <section className="rounded-xl border p-4 sm:p-6">
         <h2 className="text-lg font-semibold">Focused Time by Service</h2>
         {serviceData.length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">No focused usage synced yet.</p>
@@ -102,7 +101,7 @@ export function UsageAnalytics({
         )}
       </section>
 
-      <section className="rounded-xl border p-6">
+      <section className="rounded-xl border p-4 sm:p-6">
         <h2 className="text-lg font-semibold">Inactive Subscriptions</h2>
         {inactiveSubscriptions.length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">No inactive subscriptions.</p>

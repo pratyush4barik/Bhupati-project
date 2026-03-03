@@ -36,9 +36,9 @@ export default async function DeletedGroupsPage() {
       />
       <SidebarInset>
         <SiteHeader title="Deleted Groups" />
-        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
+        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
           {deletedCards.length === 0 ? (
-            <section className="rounded-xl border p-6">
+            <section className="rounded-xl border p-4 sm:p-6">
               <p className="text-sm text-muted-foreground">No deleted groups.</p>
             </section>
           ) : (

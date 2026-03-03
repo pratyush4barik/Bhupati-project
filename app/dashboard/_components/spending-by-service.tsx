@@ -48,12 +48,12 @@ export function SpendingByService({ data }: { data: ServiceSpending[] }) {
               const color = item.color || defaultColors[idx % defaultColors.length];
               return (
                 <div key={item.service} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className={`inline-block h-2.5 w-2.5 rounded-full ${color}`} />
-                      <span className="font-medium">{item.service}</span>
+                  <div className="flex items-center justify-between gap-2 text-sm">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full ${color}`} />
+                      <span className="truncate font-medium">{item.service}</span>
                     </div>
-                    <span className="tabular-nums text-muted-foreground">
+                    <span className="shrink-0 tabular-nums text-muted-foreground">
                       ₹{item.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                     </span>
                   </div>

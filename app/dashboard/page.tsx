@@ -56,13 +56,13 @@ export default async function DashboardPage() {
     .groupBy(sql`to_char(${transactions.createdAt}, 'YYYY-MM-DD')`)
     .orderBy(sql`to_char(${transactions.createdAt}, 'YYYY-MM-DD')`);
 
-  // Total spending
+  // Total spending on subscriptions
   const [totalSpendingRow] = await db
     .select({
-      total: sql<number>`coalesce(sum(${transactions.amount}::numeric), 0)`,
+      total: sql<number>`coalesce(sum(${subscriptions.totalPrice}::numeric), 0)`,
     })
-    .from(transactions)
-    .where(eq(transactions.userId, session.user.id));
+    .from(subscriptions)
+    .where(eq(subscriptions.userId, session.user.id));
 
   // Active subscriptions
   const activeSubscriptions = await db
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
           />
 
           {/* Charts row */}
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-[2fr_1fr]">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-[2fr_1fr]">
             <AnalyticsChart data={chartData} />
             <SpendingByService data={serviceSpendingData} />
           </div>

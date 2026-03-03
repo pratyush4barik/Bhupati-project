@@ -44,8 +44,8 @@ export default async function SettingsPage() {
       />
       <SidebarInset>
         <SiteHeader title="Settings" />
-        <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-6 px-6 py-8">
-          <section className="rounded-xl border p-6">
+        <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
+          <section className="rounded-xl border p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold">Profile</h2>
             <p className="text-sm text-muted-foreground">
               Name: {dbUser?.name || session.user.name}
@@ -55,7 +55,7 @@ export default async function SettingsPage() {
             </p>
           </section>
 
-          <section className="rounded-xl border p-6">
+          <section className="rounded-xl border p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold">Linked Accounts</h2>
             {linkedAccounts.length === 0 ? (
               <p className="text-sm text-muted-foreground">No linked accounts.</p>
@@ -64,7 +64,7 @@ export default async function SettingsPage() {
                 {linkedAccounts.map((linkedAccount) => (
                   <li className="rounded-lg border p-3" key={linkedAccount.id}>
                     <p className="font-medium">{linkedAccount.providerId}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm break-all text-muted-foreground">
                       Account ID: {linkedAccount.accountId}
                     </p>
                   </li>
@@ -73,7 +73,7 @@ export default async function SettingsPage() {
             )}
           </section>
 
-          <section className="rounded-xl border p-6">
+          <section className="rounded-xl border p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold">Active Sessions</h2>
             <p className="text-sm text-muted-foreground">
               Total sessions: {activeSessions.length}

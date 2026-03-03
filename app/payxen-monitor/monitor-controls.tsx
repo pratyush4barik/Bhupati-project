@@ -90,7 +90,7 @@ export function MonitorControls() {
   }
 
   return (
-    <section className="rounded-2xl border bg-card p-6 shadow-sm">
+    <section className="rounded-2xl border bg-card p-4 shadow-sm sm:p-6">
       <h2 className="text-lg font-semibold">Desktop Connection</h2>
       <p className="mt-2 text-sm text-muted-foreground">
         Generate a secure token and paste it in the PayXen Monitor desktop app to start syncing usage.

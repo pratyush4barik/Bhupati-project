@@ -48,10 +48,10 @@ export default async function PayXenMonitorPage() {
       />
       <SidebarInset>
         <SiteHeader title="PayXen Monitor" />
-        <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-8">
-          <section className="rounded-2xl border bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 text-white shadow-sm">
+        <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
+          <section className="rounded-2xl border bg-gradient-to-br from-zinc-900 to-zinc-800 p-4 text-white shadow-sm sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-300">Desktop Tracking</p>
-            <h1 className="mt-3 text-3xl font-semibold">PayXen Monitor</h1>
+            <h1 className="mt-3 text-2xl font-semibold sm:text-3xl">PayXen Monitor</h1>
             <p className="mt-3 max-w-3xl text-sm text-zinc-200">
               A transparent desktop companion that tracks focused time for selected subscription services only.
               No browsing history, no personal account content, and no page-level surveillance.
@@ -89,8 +89,8 @@ export default async function PayXenMonitorPage() {
 
           <PwaInstallSection />
 
-          <section className="grid gap-6 lg:grid-cols-2">
-            <article className="rounded-2xl border bg-card p-6 shadow-sm">
+          <section className="grid gap-4 sm:gap-6 md:grid-cols-2">
+            <article className="rounded-2xl border bg-card p-4 shadow-sm sm:p-6">
               <h2 className="text-lg font-semibold">Installation Guide</h2>
               <ol className="mt-4 space-y-2 text-sm text-muted-foreground">
                 {installationSteps.map((step, index) => (
@@ -100,7 +100,7 @@ export default async function PayXenMonitorPage() {
                 ))}
               </ol>
             </article>
-            <article className="rounded-2xl border bg-card p-6 shadow-sm">
+            <article className="rounded-2xl border bg-card p-4 shadow-sm sm:p-6">
               <h2 className="text-lg font-semibold">System Requirements</h2>
               <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                 {systemRequirements.map((item) => (

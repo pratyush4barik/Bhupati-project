@@ -50,7 +50,7 @@ export default async function ExistingGroupsPage({ searchParams }: ExistingGroup
       />
       <SidebarInset>
         <SiteHeader title="Existing Groups" />
-        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
+        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
           {query.success ? (
             <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">
               {query.success}
@@ -65,7 +65,7 @@ export default async function ExistingGroupsPage({ searchParams }: ExistingGroup
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">Owner groups</h2>
             {ownerCards.length === 0 ? (
-              <div className="rounded-xl border p-6">
+              <div className="rounded-xl border p-4 sm:p-6">
                 <p className="text-sm text-muted-foreground">
                   No groups created by you yet.
                 </p>
@@ -80,7 +80,7 @@ export default async function ExistingGroupsPage({ searchParams }: ExistingGroup
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">Joined groups</h2>
             {memberCards.length === 0 ? (
-              <div className="rounded-xl border p-6">
+              <div className="rounded-xl border p-4 sm:p-6">
                 <p className="text-sm text-muted-foreground">No paid member groups yet.</p>
               </div>
             ) : (

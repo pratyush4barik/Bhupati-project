@@ -169,7 +169,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
       />
       <SidebarInset>
         <SiteHeader title="Wallet" />
-        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
+        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
           <PendingStatusRefresher shouldRefresh={hasPendingWithdrawal} />
 
           {query.success ? (
@@ -183,11 +183,11 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
             </p>
           ) : null}
 
-          <section className="rounded-xl border p-6">
-            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <section className="rounded-xl border p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-start md:justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Current Balance</p>
-                <p className="mt-2 text-3xl font-semibold">{formatInr(userWallet.balance)}</p>
+                <p className="mt-2 text-2xl font-semibold sm:text-3xl">{formatInr(userWallet.balance)}</p>
               </div>
               <div className="md:text-right">
                 <p className="text-sm text-muted-foreground">Your PayXen ID</p>
@@ -202,8 +202,8 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
             </div>
           </section>
 
-          <section className="grid gap-4 md:grid-cols-2">
-            <article className="rounded-xl border p-6">
+          <section className="grid gap-4 sm:grid-cols-2">
+            <article className="rounded-xl border p-4 sm:p-6">
               <h2 className="mb-4 text-lg font-semibold">Add Money</h2>
               <p className="mb-4 min-h-10 text-sm text-muted-foreground">
                 Adds money from escrow settlement into your
@@ -228,7 +228,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
               </form>
             </article>
 
-            <article className="rounded-xl border p-6">
+            <article className="rounded-xl border p-4 sm:p-6">
               <h2 className="mb-4 text-lg font-semibold">Withdraw Money</h2>
               <p className="mb-4 min-h-10 text-sm text-muted-foreground">
                 Sends wallet money to your bank and records the transfer history.
@@ -251,7 +251,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
               </form>
             </article>
 
-            <article className="rounded-xl border p-6">
+            <article className="rounded-xl border p-4 sm:p-6">
               <h2 className="mb-4 text-lg font-semibold">Transfer to PayXen User</h2>
               <p className="mb-4 text-sm text-muted-foreground">
                 Use receiver `px-id` to transfer instantly.
@@ -283,7 +283,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
               </form>
             </article>
 
-            <article className="rounded-xl border p-6">
+            <article className="rounded-xl border p-4 sm:p-6">
               <h2 className="mb-4 text-lg font-semibold">Requests</h2>
               <p className="mb-4 text-sm text-muted-foreground">
                 Request money from another user using their `px-id`.
@@ -317,7 +317,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
           </section>
 
           <section>
-            <article className="rounded-xl border p-6">
+              <article className="rounded-xl border p-4 sm:p-6">
               <h2 className="mb-4 text-lg font-semibold">Transaction History</h2>
               {combinedActivity.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No wallet activity yet.</p>
@@ -325,8 +325,8 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
                 <ul className="space-y-3">
                   {combinedActivity.map((item) => (
                     <li className="rounded-lg border p-3" key={`${item.source}-${item.id}`}>
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="font-medium">{item.title}</p>
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="min-w-0 truncate font-medium">{item.title}</p>
                         <span
                           className={
                             item.status === "PENDING"

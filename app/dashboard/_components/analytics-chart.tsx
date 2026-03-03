@@ -69,11 +69,11 @@ export function AnalyticsChart({ data }: { data: SpendingDataPoint[] }) {
 
   return (
     <Card>
-      <CardHeader className="flex-row items-center justify-between">
-        <div className="flex items-center gap-3">
+      <CardHeader className="flex-row flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
           <CardTitle>Analytic</CardTitle>
           <Select value={range} onValueChange={(v) => setRange(v as "6m" | "3m" | "1m")}>
-            <SelectTrigger className="h-7 w-[130px] text-xs">
+            <SelectTrigger className="h-7 w-auto min-w-[110px] text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -93,7 +93,7 @@ export function AnalyticsChart({ data }: { data: SpendingDataPoint[] }) {
             No spending data yet. Transactions will appear here.
           </p>
         ) : (
-          <ChartContainer config={chartConfig} className="h-[300px] w-full">
+          <ChartContainer config={chartConfig} className="h-[220px] w-full sm:h-[300px]">
             <AreaChart data={grouped}>
               <defs>
                 <linearGradient id="fillSpending" x1="0" y1="0" x2="0" y2="1">
@@ -122,7 +122,8 @@ export function AnalyticsChart({ data }: { data: SpendingDataPoint[] }) {
                   if (v >= 1_000) return `₹${(v / 1_000).toFixed(0)}K`;
                   return `₹${v}`;
                 }}
-                width={60}
+                width={50}
+                className="hidden sm:block"
               />
               <ChartTooltip
                 cursor={false}

@@ -79,7 +79,7 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
       />
       <SidebarInset>
         <SiteHeader title="Requests" />
-        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
+        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
           {query.success ? (
             <p className="rounded-lg border border-green-800 bg-green-950 px-4 py-3 text-sm text-green-400">
               {query.success}
@@ -94,13 +94,13 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">Wallet Requests</h2>
             {walletRequestRows.length === 0 ? (
-              <section className="rounded-xl border p-6">
+              <section className="rounded-xl border p-4 sm:p-6">
                 <p className="text-sm text-muted-foreground">No pending wallet requests.</p>
               </section>
             ) : (
               walletRequestRows.map((item) => (
-                <article className="rounded-xl border p-4" key={item.id}>
-                  <div className="grid gap-3 md:grid-cols-[1fr_auto_auto] md:items-center">
+                <article className="rounded-xl border p-3 sm:p-4" key={item.id}>
+                  <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-center">
                     <div>
                       <p className="text-sm font-semibold">{item.requesterName}</p>
                       <p className="text-xs text-muted-foreground">{item.requesterEmail}</p>
@@ -112,7 +112,7 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
                       </p>
                       <p className="text-sm font-semibold">Amount: {formatInr(item.amount)}</p>
                     </div>
-                    <div className="md:text-right">
+                    <div className="sm:text-right">
                       <form action={payWalletMoneyRequestAction}>
                         <input name="requestId" type="hidden" value={item.id} />
                         <button
@@ -135,7 +135,7 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">Group Requests</h2>
             {requestCards.length === 0 ? (
-              <section className="rounded-xl border p-6">
+              <section className="rounded-xl border p-4 sm:p-6">
                 <p className="text-sm text-muted-foreground">No pending group requests.</p>
               </section>
             ) : (

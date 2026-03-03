@@ -76,7 +76,7 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
       />
       <SidebarInset>
         <SiteHeader title="Create Groups" />
-        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
+        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
           {query.success ? (
             <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
               {query.success}

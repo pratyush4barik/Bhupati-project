@@ -146,7 +146,7 @@ export function GroupCard({
   };
 
   return (
-    <article className="rounded-xl border p-4">
+    <article className="rounded-xl border p-3 sm:p-4">
       <div className="mb-2 flex items-center justify-between">
         <span
           className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${subscriptionStatusClass(card.subscriptionStatus)}`}
@@ -172,7 +172,7 @@ export function GroupCard({
         ) : null}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div className="rounded-md border bg-muted/20 p-3">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-md border bg-background">
@@ -240,17 +240,17 @@ export function GroupCard({
           <div className="mt-3 space-y-2">
             {card.members.map((member) => (
               <div
-                className="flex items-center justify-between rounded-md border bg-background px-2 py-1.5"
+                className="flex flex-wrap items-center justify-between gap-1 rounded-md border bg-background px-2 py-1.5"
                 key={member.userId}
               >
-                <div className="flex items-center gap-2">
-                  <IconUser className="h-4 w-4 text-muted-foreground" />
-                  <div>
+                <div className="flex min-w-0 items-center gap-2">
+                  <IconUser className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0">
                     <p
                       className={
                         member.removalRequestStatus === "PENDING"
-                          ? "text-sm font-medium text-red-700"
-                          : "text-sm"
+                          ? "truncate text-sm font-medium text-red-700"
+                          : "truncate text-sm"
                       }
                     >
                       {member.name}
@@ -260,7 +260,7 @@ export function GroupCard({
                     ) : null}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center gap-2">
                   {card.viewerRole === "OWNER" ? (
                     <p className="text-xs text-muted-foreground">
                       {member.percentage}% | {formatInr(member.amount)}

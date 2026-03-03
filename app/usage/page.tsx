@@ -137,7 +137,7 @@ export default async function UsagePage() {
       />
       <SidebarInset>
         <SiteHeader title="Usage" />
-        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-8">
+        <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
           <UsageAnalytics
             dailyData={dailyData}
             serviceData={serviceData}
