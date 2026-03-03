@@ -76,7 +76,7 @@ export function AnalyticsChart({ data }: { data: SpendingDataPoint[] }) {
             <SelectTrigger className="h-7 w-auto min-w-[110px] text-xs">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper" sideOffset={4}>
               <SelectItem value="6m">Last 6 months</SelectItem>
               <SelectItem value="3m">Last 3 months</SelectItem>
               <SelectItem value="1m">Last month</SelectItem>
