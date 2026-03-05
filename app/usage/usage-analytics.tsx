@@ -23,6 +23,18 @@ type UsageAnalyticsProps = {
     serviceName: string;
     status: string;
   }>;
+  groupUsageData: Array<{
+    groupSubscriptionId: string;
+    groupName: string;
+    serviceName: string;
+    totalMinutes: number;
+    members: Array<{
+      userId: string;
+      name: string;
+      email: string;
+      minutes: number;
+    }>;
+  }>;
 };
 
 const chartConfig = {
@@ -45,6 +57,7 @@ export function UsageAnalytics({
   monthMinutes,
   activeServiceCount,
   inactiveSubscriptions,
+  groupUsageData,
 }: UsageAnalyticsProps) {
   return (
     <div className="space-y-6">
@@ -98,6 +111,50 @@ export function UsageAnalytics({
               </li>
             ))}
           </ul>
+        )}
+      </section>
+
+      <section className="rounded-xl border p-4 sm:p-6">
+        <h2 className="text-lg font-semibold">Group Usage by Membership</h2>
+        {groupUsageData.length === 0 ? (
+          <p className="mt-2 text-sm text-muted-foreground">
+            No shared group memberships found in your active subscriptions.
+          </p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {groupUsageData.map((group) => (
+              <article key={group.groupSubscriptionId} className="rounded-lg border p-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold">{group.serviceName}</span>
+                    <span className="rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-medium text-sky-400">
+                      Group - {group.groupName}
+                    </span>
+                  </div>
+                  <span className="text-sm font-medium text-foreground">
+                    Total: {formatMinutes(group.totalMinutes)}
+                  </span>
+                </div>
+                {group.members.length > 0 ? (
+                  <ul className="mt-3 space-y-1">
+                    {group.members.map((member) => (
+                      <li
+                        key={member.userId}
+                        className="flex items-center justify-between rounded-md border border-border/70 px-2 py-1.5"
+                      >
+                        <span className="text-xs text-muted-foreground">
+                          {member.name || member.email}
+                        </span>
+                        <span className="text-xs font-medium">
+                          {formatMinutes(member.minutes)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </article>
+            ))}
+          </div>
         )}
       </section>
 

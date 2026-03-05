@@ -5,6 +5,7 @@ import {
   getOwnerExistingGroupCards,
   processPendingGroupDeletionRequests,
   processPendingMemberRemovalRequests,
+  processRecurringGroupPaymentRequests,
   processRejectedGroupRequestMembers,
 } from "@/app/groups/group-queries";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
@@ -27,6 +28,9 @@ export default async function ExistingGroupsPage({ searchParams }: ExistingGroup
     processPendingMemberRemovalRequests(session.user.id),
     processRejectedGroupRequestMembers(session.user.id),
   ]);
+  if (typeof processRecurringGroupPaymentRequests === "function") {
+    await processRecurringGroupPaymentRequests(session.user.id);
+  }
   const [ownerCards, memberCards] = await Promise.all([
     getOwnerExistingGroupCards(session.user.id),
     getMemberExistingGroupCards(session.user.id),

@@ -47,6 +47,13 @@ function hasMissingRemovalColumnError(error: unknown) {
   );
 }
 
+const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+const addMonthsToDate = (dateInput: string | Date, months: number) => {
+  const date = new Date(dateInput);
+  date.setMonth(date.getMonth() + Math.max(1, months));
+  return formatDate(date);
+};
+
 async function hydrateGroupCards(baseRows: BaseGroupRow[]): Promise<GroupCardView[]> {
   if (baseRows.length === 0) return [];
 
@@ -404,6 +411,211 @@ export async function getMemberRequestCards(userId: string) {
       viewerShareAmount: row.viewerShareAmount,
     })),
   );
+}
+
+export async function processRecurringGroupPaymentRequests(userId: string) {
+  const candidateRows = await db
+    .select({
+      id: groupSubscriptions.id,
+      groupId: groupSubscriptions.groupId,
+      nextBillingDate: groupSubscriptions.nextBillingDate,
+    })
+    .from(groupSubscriptions)
+    .innerJoin(groups, eq(groups.id, groupSubscriptions.groupId))
+    .leftJoin(
+      groupMembers,
+      and(
+        eq(groupMembers.groupId, groups.id),
+        eq(groupMembers.userId, userId),
+        eq(groupMembers.role, "MEMBER"),
+      ),
+    )
+    .where(
+      and(
+        isNull(groupSubscriptions.deletedAt),
+        eq(groupSubscriptions.status, "ACTIVE"),
+        or(
+          eq(groups.createdBy, userId),
+          and(
+            eq(groupMembers.userId, userId),
+            eq(groupMembers.role, "MEMBER"),
+          ),
+        ),
+      ),
+    );
+
+  if (candidateRows.length === 0) return;
+
+  const now = new Date();
+  for (const row of candidateRows) {
+    const cutoff = new Date(`${row.nextBillingDate}T00:00:00`);
+    cutoff.setDate(cutoff.getDate() - 1);
+    if (now < cutoff) continue;
+
+    const billingPlusOne = new Date(`${row.nextBillingDate}T00:00:00`);
+    billingPlusOne.setDate(billingPlusOne.getDate() + 1);
+
+    const memberSplitRows = await db
+      .select({
+        userId: groupSubscriptionSplits.userId,
+        sharePercentage: groupSubscriptionSplits.sharePercentage,
+        shareAmount: groupSubscriptionSplits.shareAmount,
+        paymentStatus: groupSubscriptionSplits.paymentStatus,
+        paidAt: groupSubscriptionSplits.paidAt,
+      })
+      .from(groupSubscriptionSplits)
+      .innerJoin(
+        groupMembers,
+        and(
+          eq(groupMembers.groupId, row.groupId),
+          eq(groupMembers.userId, groupSubscriptionSplits.userId),
+          eq(groupMembers.role, "MEMBER"),
+        ),
+      )
+      .where(eq(groupSubscriptionSplits.groupSubscriptionId, row.id));
+
+    if (memberSplitRows.length === 0) {
+      if (now >= billingPlusOne) {
+        await db
+          .update(groupSubscriptions)
+          .set({
+            nextBillingDate: addMonthsToDate(row.nextBillingDate, 1),
+          })
+          .where(eq(groupSubscriptions.id, row.id));
+      }
+      continue;
+    }
+
+    const allPaid = memberSplitRows.every((split) => split.paymentStatus === "PAID");
+    const alreadyPaidThisCycle = memberSplitRows.some(
+      (split) => split.paidAt !== null && split.paidAt >= cutoff,
+    );
+
+    if (allPaid && alreadyPaidThisCycle) {
+      await db
+        .update(groupSubscriptions)
+        .set({
+          nextBillingDate: addMonthsToDate(row.nextBillingDate, 1),
+        })
+        .where(eq(groupSubscriptions.id, row.id));
+      continue;
+    }
+
+    if (allPaid) {
+      const memberUserIds = memberSplitRows.map((split) => split.userId);
+      await db
+        .update(groupSubscriptionSplits)
+        .set({ paymentStatus: "PENDING", paidAt: null })
+        .where(
+          and(
+            eq(groupSubscriptionSplits.groupSubscriptionId, row.id),
+            inArray(groupSubscriptionSplits.userId, memberUserIds),
+            eq(groupSubscriptionSplits.paymentStatus, "PAID"),
+          ),
+        );
+      continue;
+    }
+
+    if (now < billingPlusOne) continue;
+
+    const overdueMembers = memberSplitRows.filter((split) =>
+      split.paymentStatus === "PENDING" || split.paymentStatus === "ACCEPTED",
+    );
+
+    for (const member of overdueMembers) {
+      const [ownerMember] = await db
+        .select({ userId: groupMembers.userId })
+        .from(groupMembers)
+        .where(
+          and(
+            eq(groupMembers.groupId, row.groupId),
+            eq(groupMembers.role, "OWNER"),
+          ),
+        )
+        .limit(1);
+
+      if (!ownerMember || ownerMember.userId === member.userId) continue;
+
+      const [ownerSplit] = await db
+        .select({
+          sharePercentage: groupSubscriptionSplits.sharePercentage,
+          shareAmount: groupSubscriptionSplits.shareAmount,
+        })
+        .from(groupSubscriptionSplits)
+        .where(
+          and(
+            eq(groupSubscriptionSplits.groupSubscriptionId, row.id),
+            eq(groupSubscriptionSplits.userId, ownerMember.userId),
+          ),
+        )
+        .limit(1);
+
+      if (!ownerSplit) continue;
+
+      const ownerAmount = Number.parseFloat(ownerSplit.shareAmount);
+      const memberAmount = Number.parseFloat(member.shareAmount);
+      if (!Number.isFinite(ownerAmount) || !Number.isFinite(memberAmount)) continue;
+
+      await db
+        .update(groupSubscriptionSplits)
+        .set({
+          sharePercentage: ownerSplit.sharePercentage + member.sharePercentage,
+          shareAmount: (ownerAmount + memberAmount).toFixed(2),
+        })
+        .where(
+          and(
+            eq(groupSubscriptionSplits.groupSubscriptionId, row.id),
+            eq(groupSubscriptionSplits.userId, ownerMember.userId),
+          ),
+        );
+
+      await db
+        .delete(groupSubscriptionSplits)
+        .where(
+          and(
+            eq(groupSubscriptionSplits.groupSubscriptionId, row.id),
+            eq(groupSubscriptionSplits.userId, member.userId),
+          ),
+        );
+
+      await db
+        .delete(groupMembers)
+        .where(
+          and(
+            eq(groupMembers.groupId, row.groupId),
+            eq(groupMembers.userId, member.userId),
+            eq(groupMembers.role, "MEMBER"),
+          ),
+        );
+    }
+
+    const remainingMemberSplits = await db
+      .select({
+        paymentStatus: groupSubscriptionSplits.paymentStatus,
+      })
+      .from(groupSubscriptionSplits)
+      .innerJoin(
+        groupMembers,
+        and(
+          eq(groupMembers.groupId, row.groupId),
+          eq(groupMembers.userId, groupSubscriptionSplits.userId),
+          eq(groupMembers.role, "MEMBER"),
+        ),
+      )
+      .where(eq(groupSubscriptionSplits.groupSubscriptionId, row.id));
+
+    const cycleSettled = remainingMemberSplits.every(
+      (split) => split.paymentStatus === "PAID",
+    );
+    if (cycleSettled) {
+      await db
+        .update(groupSubscriptions)
+        .set({
+          nextBillingDate: addMonthsToDate(row.nextBillingDate, 1),
+        })
+        .where(eq(groupSubscriptions.id, row.id));
+    }
+  }
 }
 
 export async function processPendingGroupDeletionRequests(userId: string) {

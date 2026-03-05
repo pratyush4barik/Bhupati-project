@@ -4,8 +4,6 @@ import { useState, useCallback } from "react";
 import { IconRobot, IconShieldCheck, IconAlertTriangle } from "@tabler/icons-react";
 import type { GhostSubscription } from "./usage-overview";
 
-/* ────────────── iOS-style toggle ────────────── */
-
 function IosToggle({
   checked,
   onChange,
@@ -41,8 +39,6 @@ function IosToggle({
   );
 }
 
-/* ────────────── Helpers ────────────── */
-
 function formatMinutes(totalMinutes: number) {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
@@ -51,13 +47,11 @@ function formatMinutes(totalMinutes: number) {
 }
 
 function planLabel(months: number | null) {
-  if (!months) return "—";
+  if (!months) return "-";
   if (months === 1) return "Monthly";
   if (months === 12) return "Yearly";
   return `${months} months`;
 }
-
-/* ────────────── Agent Activity Editor ────────────── */
 
 export function AgentActivityEditor({
   subscriptions: subs,
@@ -103,28 +97,25 @@ export function AgentActivityEditor({
         setSaving(null);
       }
     },
-    [],
+    [onUpdate],
   );
 
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold flex items-center gap-2">
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
           <IconRobot className="size-5 text-violet-500" />
           Agent Activity Manager
         </h2>
         <p className="text-sm text-muted-foreground">
-          Enable the Ghost Agent on a service — when your usage falls below the minimum
-          threshold, the agent will automatically cancel or deactivate the plan to prevent
-          unnecessary payments.
+          Enable the Ghost Agent on a service. If usage falls below your threshold,
+          the agent can auto-cancel before billing.
         </p>
       </div>
 
       {subs.length === 0 ? (
         <div className="rounded-xl border border-dashed p-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            No active subscriptions to manage.
-          </p>
+          <p className="text-sm text-muted-foreground">No active subscriptions to manage.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -142,13 +133,24 @@ export function AgentActivityEditor({
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{sub.serviceName}</span>
                       <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                        {sub.planName ?? "—"} · {planLabel(sub.planDurationMonths)}
+                        {sub.planName ?? "-"} - {planLabel(sub.planDurationMonths)}
                       </span>
+                      {sub.isGroupShared ? (
+                        <span className="rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-medium text-sky-400">
+                          Group{sub.groupName ? ` - ${sub.groupName}` : ""}
+                        </span>
+                      ) : null}
                     </div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                      <span>Usage: <strong className="text-foreground">{formatMinutes(sub.usageMinutes)}</strong></span>
-                      <span>Threshold: <strong className="text-foreground">{formatMinutes(sub.minUsageMinutes)}</strong></span>
-                      <span>Next billing: <strong className="text-foreground">{sub.nextBillingDate}</strong></span>
+                      <span>
+                        Usage: <strong className="text-foreground">{formatMinutes(sub.usageMinutes)}{sub.isGroupShared ? " total" : ""}</strong>
+                      </span>
+                      <span>
+                        Threshold: <strong className="text-foreground">{formatMinutes(sub.minUsageMinutes)}</strong>
+                      </span>
+                      <span>
+                        Next billing: <strong className="text-foreground">{sub.nextBillingDate}</strong>
+                      </span>
                     </div>
 
                     {belowThreshold && (() => {
@@ -156,13 +158,20 @@ export function AgentActivityEditor({
                       const cancelDate = new Date(billing);
                       cancelDate.setDate(cancelDate.getDate() - 1);
                       const now = new Date();
-                      const daysLeft = Math.max(0, Math.ceil((cancelDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
-                      const cancelStr = cancelDate.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+                      const daysLeft = Math.max(
+                        0,
+                        Math.ceil((cancelDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+                      );
+                      const cancelStr = cancelDate.toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      });
                       return (
                         <div className="mt-2 space-y-1">
                           <div className="flex items-center gap-1.5 text-xs font-medium text-amber-400">
                             <IconAlertTriangle className="size-3.5" />
-                            Usage is below threshold — subscription will be auto-cancelled on {cancelStr} (1 day before billing).
+                            Usage is below threshold. Subscription will be auto-cancelled on {cancelStr} (1 day before billing).
                           </div>
                           <p className="text-[10px] text-muted-foreground">
                             {daysLeft === 0
@@ -193,7 +202,6 @@ export function AgentActivityEditor({
                   </div>
                 </div>
 
-                {/* Threshold slider */}
                 {sub.agentEnabled && (
                   <div className="mt-4 space-y-2 border-t border-border pt-3">
                     <label className="flex items-center justify-between text-xs text-muted-foreground">

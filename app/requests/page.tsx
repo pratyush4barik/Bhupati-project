@@ -1,7 +1,10 @@
 ﻿import type React from "react";
 import { and, desc, eq } from "drizzle-orm";
 import { GroupCard } from "@/app/groups/_components/group-card";
-import { getMemberRequestCards } from "@/app/groups/group-queries";
+import {
+  getMemberRequestCards,
+  processRecurringGroupPaymentRequests,
+} from "@/app/groups/group-queries";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
 import { SiteHeader } from "@/app/dashboard-01/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -21,6 +24,9 @@ type RequestsPageProps = {
 export default async function RequestsPage({ searchParams }: RequestsPageProps) {
   const session = await requireSession();
   const query = (await searchParams) ?? {};
+  if (typeof processRecurringGroupPaymentRequests === "function") {
+    await processRecurringGroupPaymentRequests(session.user.id);
+  }
   const [requestCards, userWallet, walletRequestRows] = await Promise.all([
     getMemberRequestCards(session.user.id),
     db
