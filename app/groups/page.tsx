@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { GroupsBuilder } from "@/app/groups/_components/groups-builder";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
@@ -71,6 +71,7 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -96,3 +97,5 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
     </SidebarProvider>
   );
 }
+
+

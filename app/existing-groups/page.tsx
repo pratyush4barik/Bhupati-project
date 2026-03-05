@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { GroupCard } from "@/app/groups/_components/group-card";
 import {
   getMemberExistingGroupCards,
@@ -45,6 +45,7 @@ export default async function ExistingGroupsPage({ searchParams }: ExistingGroup
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -94,3 +95,5 @@ export default async function ExistingGroupsPage({ searchParams }: ExistingGroup
     </SidebarProvider>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { GroupCard } from "@/app/groups/_components/group-card";
 import {
   getDeletedGroupCards,
@@ -31,6 +31,7 @@ export default async function DeletedGroupsPage() {
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -56,3 +57,5 @@ export default async function DeletedGroupsPage() {
     </SidebarProvider>
   );
 }
+
+

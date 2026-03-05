@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
 import type { IconType } from "react-icons";
@@ -230,7 +230,7 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
     <SidebarProvider
       style={{ "--sidebar-width": "calc(var(--spacing) * 60)", "--header-height": "calc(var(--spacing) * 12)" } as React.CSSProperties}
     >
-      <AppSidebar user={{ name: session.user.name ?? "User", email: session.user.email }} variant="inset" />
+      <AppSidebar user={{ name: session.user.name ?? "User", email: session.user.email, image: session.user.image ?? null }} variant="inset" />
       <SidebarInset>
         <SiteHeader title="Subscriptions" />
         <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
@@ -426,3 +426,4 @@ export default async function SubscriptionsPage({ searchParams }: SubscriptionsP
     </SidebarProvider>
   );
 }
+

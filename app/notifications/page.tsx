@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { desc, eq } from "drizzle-orm";
 import { IconTrash } from "@tabler/icons-react";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
@@ -53,6 +53,7 @@ export default async function NotificationsPage({ searchParams }: NotificationsP
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -121,3 +122,5 @@ export default async function NotificationsPage({ searchParams }: NotificationsP
     </SidebarProvider>
   );
 }
+
+

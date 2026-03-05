@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { eq } from "drizzle-orm";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
 import { SiteHeader } from "@/app/dashboard-01/site-header";
@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { account, session as sessionTable, user } from "@/db/schema";
 import { requireSession } from "@/lib/require-session";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { ProfileSettingsCard } from "@/app/settings/profile-settings-card";
 
 export default async function SettingsPage() {
   const session = await requireSession();
@@ -39,21 +40,18 @@ export default async function SettingsPage() {
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
       <SidebarInset>
         <SiteHeader title="Settings" />
         <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8">
-          <section className="rounded-xl border p-4 sm:p-6">
-            <h2 className="mb-4 text-lg font-semibold">Profile</h2>
-            <p className="text-sm text-muted-foreground">
-              Name: {dbUser?.name || session.user.name}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Email: {dbUser?.email || session.user.email}
-            </p>
-          </section>
+          <ProfileSettingsCard
+            name={dbUser?.name || session.user.name || "User"}
+            email={dbUser?.email || session.user.email}
+            image={dbUser?.image || session.user.image || null}
+          />
 
           <section className="rounded-xl border p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold">Linked Accounts</h2>
@@ -84,3 +82,5 @@ export default async function SettingsPage() {
     </SidebarProvider>
   );
 }
+
+

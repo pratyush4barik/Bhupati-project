@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { and, desc, eq } from "drizzle-orm";
 import { GroupCard } from "@/app/groups/_components/group-card";
 import { getMemberRequestCards } from "@/app/groups/group-queries";
@@ -52,8 +52,8 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
 
   const formatInr = (value: string | number) => {
     const num = typeof value === "number" ? value : Number.parseFloat(value);
-    if (!Number.isFinite(num)) return "₹0.00";
-    return `₹${num.toFixed(2)}`;
+    if (!Number.isFinite(num)) return "â‚¹0.00";
+    return `â‚¹${num.toFixed(2)}`;
   };
 
   const formatDate = (date: Date) =>
@@ -75,6 +75,7 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -157,3 +158,5 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
     </SidebarProvider>
   );
 }
+
+

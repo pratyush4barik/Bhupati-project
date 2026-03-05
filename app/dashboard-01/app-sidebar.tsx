@@ -18,7 +18,7 @@ import {
 } from "@tabler/icons-react"
 
 import { SignOutButton } from "@/components/ui/app_components/sign_out_button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Sidebar,
   SidebarContent,
@@ -36,6 +36,7 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   user?: {
     name: string
     email: string
+    image?: string | null
   }
 }
 
@@ -108,6 +109,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const resolvedUser = user ?? {
     name: "User",
     email: "user@example.com",
+    image: null,
   }
   const initials = resolvedUser.name
     .split(" ")
@@ -199,6 +201,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
           <div className="flex items-center justify-between gap-2 rounded-md border p-2 text-xs">
             <div className="flex min-w-0 items-center gap-2">
               <Avatar className="h-8 w-8 rounded-full border">
+                <AvatarImage src={resolvedUser.image ?? undefined} alt={resolvedUser.name} />
                 <AvatarFallback className="rounded-full text-[10px] font-semibold">
                   {initials || "U"}
                 </AvatarFallback>

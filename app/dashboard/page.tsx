@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import { desc, eq, sql } from "drizzle-orm";
 import { AppSidebar } from "@/app/dashboard-01/app-sidebar";
 import { SiteHeader } from "@/app/dashboard-01/site-header";
@@ -125,6 +125,7 @@ export default async function DashboardPage() {
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -153,3 +154,5 @@ export default async function DashboardPage() {
     </SidebarProvider>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import type React from "react";
+﻿import type React from "react";
 import fs from "node:fs";
 import path from "node:path";
 import Link from "next/link";
@@ -43,6 +43,7 @@ export default async function PayXenMonitorPage() {
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -124,3 +125,5 @@ export default async function PayXenMonitorPage() {
     </SidebarProvider>
   );
 }
+
+

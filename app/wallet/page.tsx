@@ -168,6 +168,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
         user={{
           name: session.user.name ?? "User",
           email: session.user.email,
+          image: session.user.image ?? null,
         }}
         variant="inset"
       />
@@ -366,3 +367,5 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
     </SidebarProvider>
   );
 }
+
+
