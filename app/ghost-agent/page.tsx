@@ -31,7 +31,7 @@ export default async function GhostAgentPage() {
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight">Ghost Agent</h1>
             <p className="text-sm text-muted-foreground">
-              Automatically manage your subscriptions â€” cancel unused plans and free trials before you get charged.
+              Automatically manage your subscriptions - cancel unused plans and free trials before you get charged.
             </p>
           </div>
           <GhostAgentDashboard />

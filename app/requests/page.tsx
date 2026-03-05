@@ -52,8 +52,8 @@ export default async function RequestsPage({ searchParams }: RequestsPageProps) 
 
   const formatInr = (value: string | number) => {
     const num = typeof value === "number" ? value : Number.parseFloat(value);
-    if (!Number.isFinite(num)) return "â‚¹0.00";
-    return `â‚¹${num.toFixed(2)}`;
+    if (!Number.isFinite(num)) return "₹0.00";
+    return `₹${num.toFixed(2)}`;
   };
 
   const formatDate = (date: Date) =>
