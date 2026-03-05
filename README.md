@@ -46,6 +46,8 @@ This repo includes a Render Blueprint file at `render.yaml`.
    - `GOOGLE_CLIENT_SECRET`
    - `DATABASE_URL`
    - `MONITOR_JWT_SECRET`
+   - `RESEND_API_KEY`
+   - `RESEND_FROM_EMAIL`
 
 ### Option 2: Manual Web Service
 
