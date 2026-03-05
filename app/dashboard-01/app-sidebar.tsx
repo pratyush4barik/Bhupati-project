@@ -18,6 +18,7 @@ import {
 } from "@tabler/icons-react"
 
 import { SignOutButton } from "@/components/ui/app_components/sign_out_button"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   Sidebar,
   SidebarContent,
@@ -108,6 +109,12 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     name: "User",
     email: "user@example.com",
   }
+  const initials = resolvedUser.name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase()
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -189,12 +196,19 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
 
       <SidebarFooter>
         <div className="p-2">
-          <div className="flex items-center justify-between gap-2 rounded-md border p-3 text-xs">
-            <div className="min-w-0">
-              <p className="truncate font-medium">{resolvedUser.name}</p>
-              <p className="text-muted-foreground truncate">{resolvedUser.email}</p>
+          <div className="flex items-center justify-between gap-2 rounded-md border p-2 text-xs">
+            <div className="flex min-w-0 items-center gap-2">
+              <Avatar className="h-8 w-8 rounded-full border">
+                <AvatarFallback className="rounded-full text-[10px] font-semibold">
+                  {initials || "U"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <p className="truncate font-medium leading-tight">{resolvedUser.name}</p>
+                <p className="text-muted-foreground truncate text-[11px] leading-tight">{resolvedUser.email}</p>
+              </div>
             </div>
-            <SignOutButton compact className="shrink-0" />
+            <SignOutButton compact className="h-7 shrink-0 px-2 text-[11px]" />
           </div>
         </div>
       </SidebarFooter>

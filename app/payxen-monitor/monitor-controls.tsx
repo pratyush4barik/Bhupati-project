@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type TokenStatusResponse = {
@@ -15,6 +16,7 @@ export function MonitorControls() {
   const [consented, setConsented] = useState(false);
   const [loading, setLoading] = useState<"" | "connect" | "disconnect" | "delete-data">("");
   const [message, setMessage] = useState<string>("");
+  const [copied, setCopied] = useState(false);
 
   const canConnect = consented && loading === "";
 
@@ -89,6 +91,17 @@ export function MonitorControls() {
     }
   }
 
+  async function copyToken() {
+    if (!token) return;
+    try {
+      await navigator.clipboard.writeText(token);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setMessage("Unable to copy token. Please copy manually.");
+    }
+  }
+
   return (
     <section className="rounded-2xl border bg-card p-4 shadow-sm sm:p-6">
       <h2 className="text-lg font-semibold">Desktop Connection</h2>
@@ -139,7 +152,20 @@ export function MonitorControls() {
 
       {token ? (
         <div className="mt-4 rounded-xl border border-amber-800 bg-amber-950 p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-amber-400">One-time token</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-amber-400">One-time token</p>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="h-7 w-7 border-amber-700 bg-amber-900 text-amber-200 hover:bg-amber-800"
+              onClick={copyToken}
+              aria-label="Copy one-time token"
+              title={copied ? "Copied" : "Copy token"}
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            </Button>
+          </div>
           <p className="mt-2 break-all rounded-md bg-muted p-3 font-mono text-xs">{token}</p>
         </div>
       ) : null}
