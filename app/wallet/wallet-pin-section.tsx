@@ -2,28 +2,107 @@
 
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { IconLock, IconLockOpen, IconCheck, IconRefresh } from "@tabler/icons-react";
+import { IconCheck, IconLockOpen, IconRefresh } from "@tabler/icons-react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { PinInput } from "@/app/wallet/pin-input";
-import { setPinAction, resetPinAction } from "@/app/wallet/pin-actions";
+import { setPinAction } from "@/app/wallet/pin-actions";
 
-export function WalletPinSection({ hasPin, returnTo }: { hasPin: boolean; returnTo?: string }) {
+export function WalletPinSection({
+  hasPin,
+  returnTo,
+  userEmail,
+}: {
+  hasPin: boolean;
+  returnTo?: string;
+  userEmail: string;
+}) {
+  const [hasPinState, setHasPinState] = useState(hasPin);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [securityCode, setSecurityCode] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
+  const [sendingCode, setSendingCode] = useState(false);
+  const [verifyingCode, setVerifyingCode] = useState(false);
+  const [resetError, setResetError] = useState("");
+  const [resetMessage, setResetMessage] = useState("");
 
-  // Close the reset dialog whenever hasPin changes (e.g. after reset completes)
   useEffect(() => {
+    setHasPinState(hasPin);
     setShowResetConfirm(false);
+    setSecurityCode("");
+    setCodeSent(false);
+    setSendingCode(false);
+    setVerifyingCode(false);
+    setResetError("");
+    setResetMessage("");
   }, [hasPin]);
 
-  if (!hasPin) {
+  const requestSecurityCode = async () => {
+    if (sendingCode) return;
+    setSendingCode(true);
+    setResetError("");
+    setResetMessage("");
+
+    try {
+      const response = await fetch("/api/wallet/pin-reset/request", { method: "POST" });
+      const data = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        setResetError(data.error ?? "Failed to send security code.");
+        return;
+      }
+      setCodeSent(true);
+      setSecurityCode("");
+      setResetMessage(`Security code sent to ${userEmail}`);
+    } catch {
+      setResetError("Failed to send security code.");
+    } finally {
+      setSendingCode(false);
+    }
+  };
+
+  const verifySecurityCode = async () => {
+    if (verifyingCode) return;
+    if (securityCode.length !== 6) {
+      setResetError("Enter the 6-digit security code.");
+      return;
+    }
+
+    setVerifyingCode(true);
+    setResetError("");
+    setResetMessage("");
+    try {
+      const response = await fetch("/api/wallet/pin-reset/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: securityCode }),
+      });
+      const data = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        setResetError(data.error ?? "Security code verification failed.");
+        return;
+      }
+
+      setShowResetConfirm(false);
+      setHasPinState(false);
+      setResetMessage("");
+      setSecurityCode("");
+      setCodeSent(false);
+    } catch {
+      setResetError("Security code verification failed.");
+    } finally {
+      setVerifyingCode(false);
+    }
+  };
+
+  if (!hasPinState) {
     return <SetPinForm returnTo={returnTo} />;
   }
 
@@ -35,7 +114,13 @@ export function WalletPinSection({ hasPin, returnTo }: { hasPin: boolean; return
       </div>
       <button
         type="button"
-        onClick={() => setShowResetConfirm(true)}
+        onClick={() => {
+          setShowResetConfirm(true);
+          setSecurityCode("");
+          setCodeSent(false);
+          setResetError("");
+          setResetMessage("");
+        }}
         className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
         <IconRefresh className="h-3.5 w-3.5" />
@@ -48,23 +133,66 @@ export function WalletPinSection({ hasPin, returnTo }: { hasPin: boolean; return
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-800 bg-red-950">
               <IconLockOpen className="h-6 w-6 text-red-400" />
             </div>
-            <DialogTitle className="text-center">Reset PIN</DialogTitle>
+            <DialogTitle className="text-center">Verify before PIN reset</DialogTitle>
             <DialogDescription className="text-center">
-              This will remove your current PIN. You will need to set a new one before making any transactions.
+              We will send a wallet security code to your email. Verify it to continue and set a new PIN.
             </DialogDescription>
           </DialogHeader>
+
+          <div className="space-y-3 py-1">
+            <p className="text-center text-xs text-muted-foreground">Email: {userEmail}</p>
+            {codeSent ? (
+              <div className="space-y-3">
+                <p className="text-center text-sm font-medium">Enter 6-digit security code</p>
+                <PinInput
+                  value={securityCode}
+                  onChange={setSecurityCode}
+                  length={6}
+                  disabled={verifyingCode}
+                  autoFocus
+                />
+              </div>
+            ) : (
+              <div />
+            )}
+            {resetError ? <p className="text-center text-xs text-red-500">{resetError}</p> : null}
+            {resetMessage ? <p className="text-center text-xs text-green-600">{resetMessage}</p> : null}
+          </div>
+
           <DialogFooter className="sm:justify-center">
             <DialogClose asChild>
               <button
                 type="button"
                 className="rounded-md border px-4 py-2 text-sm transition-colors hover:bg-muted"
+                disabled={sendingCode || verifyingCode}
               >
                 Cancel
               </button>
             </DialogClose>
-            <form action={resetPinAction}>
-              <ResetPinButton />
-            </form>
+            {!codeSent ? (
+              <Button
+                type="button"
+                onClick={requestSecurityCode}
+                disabled={sendingCode}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {sendingCode ? "Sending..." : "Send code"}
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button type="button" variant="outline" onClick={requestSecurityCode} disabled={sendingCode || verifyingCode}>
+                  {sendingCode ? "Resending..." : "Resend"}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={verifySecurityCode}
+                  disabled={verifyingCode || securityCode.length !== 6}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  {verifyingCode ? "Verifying..." : "Verify & reset"}
+                </Button>
+              </div>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -84,7 +212,7 @@ function SetPinForm({ returnTo }: { returnTo?: string }) {
     <div className="space-y-4">
       <div className="flex items-center gap-2 rounded-lg border border-yellow-800 bg-yellow-950/50 px-3 py-1.5 text-xs font-medium text-yellow-400">
         <IconLockOpen className="h-3.5 w-3.5" />
-        No PIN set — set your PIN to enable transactions
+        No PIN set - set your PIN to enable transactions
       </div>
 
       {step === "set" ? (
@@ -110,7 +238,10 @@ function SetPinForm({ returnTo }: { returnTo?: string }) {
           <div className="flex justify-center gap-3">
             <button
               type="button"
-              onClick={() => { setStep("set"); setConfirmPin(""); }}
+              onClick={() => {
+                setStep("set");
+                setConfirmPin("");
+              }}
               className="rounded-lg border px-4 py-2 text-sm transition-colors hover:bg-muted"
             >
               Back
@@ -136,20 +267,7 @@ function SetPinButton({ disabled }: { disabled: boolean }) {
       disabled={disabled || pending}
       className="rounded-lg bg-violet-600 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-violet-700 disabled:opacity-50"
     >
-      {pending ? "Setting…" : "Set PIN"}
-    </button>
-  );
-}
-
-function ResetPinButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-60"
-    >
-      {pending ? "Resetting…" : "Confirm Reset"}
+      {pending ? "Setting..." : "Set PIN"}
     </button>
   );
 }

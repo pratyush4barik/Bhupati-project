@@ -61,24 +61,7 @@ export async function setPinAction(formData: FormData) {
 }
 
 export async function resetPinAction() {
-  const session = await requireSession();
-
-  const [userWallet] = await db
-    .select()
-    .from(wallet)
-    .where(eq(wallet.userId, session.user.id))
-    .limit(1);
-
-  if (!userWallet) {
-    redirect("/wallet?error=Wallet not found");
-  }
-
-  await db
-    .update(wallet)
-    .set({ pinHash: null })
-    .where(eq(wallet.id, userWallet.id));
-
-  redirect("/wallet?success=PIN has been reset. Please set a new PIN.");
+  redirect("/wallet?error=Use security code verification to reset your PIN.");
 }
 
 export async function verifyPinAction(formData: FormData): Promise<{ success: boolean; error?: string }> {

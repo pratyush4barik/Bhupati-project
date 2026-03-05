@@ -205,7 +205,11 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
               </div>
             </div>
             <div className="mt-4 border-t pt-4">
-              <WalletPinSection hasPin={!!userWallet.pinHash} returnTo={query.returnTo} />
+              <WalletPinSection
+                hasPin={!!userWallet.pinHash}
+                returnTo={query.returnTo}
+                userEmail={session.user.email}
+              />
             </div>
           </section>
 
